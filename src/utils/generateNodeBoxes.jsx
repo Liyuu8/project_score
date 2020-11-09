@@ -4,91 +4,9 @@ import NodeClick from '../components/NodeClick';
 import NodeBox from '../components/NodeBox';
 
 const Drawflow = require('drawflow');
-const styleDrawflow = require('drawflow/dist/drawflow.min.css');
 
 const generateNodeBoxes = () => {
   const editor = new Drawflow(document.getElementById('drawflow'));
-
-  // Check original result
-  // (() => {
-  //   const _originalFunc = editor.createCurvature;
-  //   editor.createCurvature = (
-  //     startPosX,
-  //     startPosY,
-  //     endPosX,
-  //     endPosY,
-  //     curvatureValue,
-  //     type
-  //   ) => {
-  //     const result = _originalFunc(
-  //       startPosX,
-  //       startPosY,
-  //       endPosX,
-  //       endPosY,
-  //       curvatureValue,
-  //       type
-  //     );
-  //     console.log(result);
-  //     return result;
-  //   };
-  // })();
-
-  editor.createCurvature = (
-    startPosX,
-    startPosY,
-    endPosX,
-    endPosY,
-    curvatureValue,
-    type
-  ) => {
-    const generateHx1 = (isConditionCertained) =>
-      startPosX +
-      Math.abs(endPosX - startPosX) *
-        (isConditionCertained
-          ? curvatureValue * (startPosX >= endPosX ? -1 : 1)
-          : curvatureValue);
-    const generateHx2 = (isConditionCertained) =>
-      endPosX -
-      Math.abs(endPosX - startPosX) *
-        (isConditionCertained
-          ? curvatureValue * (startPosX >= endPosX ? -1 : 1)
-          : curvatureValue);
-    const generateFunc1 = (hx1, hx2) =>
-      `M ${startPosX} ${startPosY} C ${hx1} ${startPosY} ${hx2} ${endPosY} ${endPosX} ${endPosY}`;
-    const generateFunc2 = (hx1, hx2) =>
-      `${generateFunc1(hx1, hx2)} M ${endPosX - 11} ${endPosY} L${
-        endPosX - 20
-      } ${endPosY - 5} L${endPosX - 20} ${endPosY + 5}Z`;
-
-    const curvatures = {
-      openclose: {
-        hx1: generateHx1(false),
-        hx2: generateHx2(false),
-        generateFunc: generateFunc2,
-      },
-      open: {
-        hx1: generateHx1(false),
-        hx2: generateHx2(true),
-        generateFunc: generateFunc1,
-      },
-      close: {
-        hx1: generateHx1(true),
-        hx2: generateHx2(false),
-        generateFunc: generateFunc2,
-      },
-      other: {
-        hx1: generateHx1(true),
-        hx2: generateHx2(true),
-        generateFunc: generateFunc1,
-      },
-    };
-
-    const curvature = curvatures[type];
-    const result = curvature.generateFunc(curvature.hx1, curvature.hx2);
-    console.log(result);
-
-    return result;
-  };
 
   editor.drawflow = {
     drawflow: {

@@ -1,10 +1,17 @@
 import React from 'react';
-import './App.sass';
 
 function App() {
   return (
     <div className="App">
-      <div id="drawflow"></div>
+      <header>
+        <h2>Project Score</h2>
+      </header>
+      <div className="wrapper">
+        <div className="col"></div>
+        <div className="col-right">
+          <div id="drawflow"></div>
+        </div>
+      </div>
     </div>
   );
 }
