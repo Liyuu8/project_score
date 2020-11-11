@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-function App() {
+const App: FC = () => {
   return (
     <div className="App">
       <header>
         <h2>Project Score</h2>
       </header>
       <div className="wrapper">
-        <div className="col"></div>
+        <div className="col" />
         <div className="col-right">
-          <div id="drawflow"></div>
+          <div id="drawflow" />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;

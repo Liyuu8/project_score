@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import NodeClick from '../components/NodeClick';
 import NodeBox from '../components/NodeBox';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Drawflow = require('drawflow');
 
 const generateNodeBoxes = () => {
@@ -250,7 +251,7 @@ const generateNodeBoxes = () => {
   const domContainer = document.querySelectorAll(
     '.NodeBox .drawflow_content_node'
   );
-  domContainer.forEach((element, i) => {
+  domContainer.forEach((element) => {
     ReactDOM.render(
       React.createElement(NodeBox, { toWhat: 'World' }, null),
       element

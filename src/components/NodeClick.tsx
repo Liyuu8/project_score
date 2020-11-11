@@ -12,7 +12,7 @@ const NodeClick: FC<Props> = ({ name }) => {
       </div>
       <div className="body">
         <input type="text" />
-        <span onClick={() => alert('hello-drawflow')}>Name :</span>
+        <span>Name :</span>
       </div>
     </div>
   );
