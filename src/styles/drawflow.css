@@ -8,26 +8,6 @@
   --dfBackgroundImage: none;
 }
 
-html,
-body {
-  margin: 0px;
-  padding: 0px;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  font-family: 'Roboto', sans-serif;
-}
-
-header {
-  height: 66px;
-  border-bottom: 1px solid var(--border-color);
-  padding-left: 20px;
-}
-header h2 {
-  margin: 0px;
-  line-height: 66px;
-}
-
 .drawflow,
 .drawflow .parent-node {
   position: relative;
@@ -165,27 +145,12 @@ header h2 {
   top: -15px;
 }
 
-.wrapper {
-  width: 100%;
-  height: calc(100vh - 67px);
-  display: flex;
-}
-
-.col {
-  overflow: auto;
-  width: 300px;
-  height: 100%;
-  border-right: 1px solid var(--border-color);
-}
-
 .swal-wide {
   width: 80% !important;
 }
 
 #drawflow {
   position: relative;
-  /* width: 90vw;
-  height: 800px; */
   width: calc(100vw - 301px);
   height: calc(100% - 50px);
   top: 40px;

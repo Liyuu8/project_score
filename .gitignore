@@ -18,6 +18,9 @@
 .env
 .firebaserc
 
+# Firebase Admin SDK credential
+*firebase-adminsdk*.json
+
 # misc
 .DS_Store
 .env.local

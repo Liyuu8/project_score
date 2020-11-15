@@ -1,17 +1,22 @@
 import React, { FC } from 'react';
+import { Redirect, Route, Switch } from 'react-router';
+
+import NavigationBar from 'components/common/menubar/NavigationBar';
+import Home from 'components/Home';
+import Project from 'components/Project';
+import Spacer from 'components/common/atoms/Spacer';
+import paths from './paths';
 
 const App: FC = () => {
   return (
     <div className="App">
-      <header>
-        <h2>Project Score</h2>
-      </header>
-      <div className="wrapper">
-        <div className="col" />
-        <div className="col-right">
-          <div id="drawflow" />
-        </div>
-      </div>
+      <NavigationBar />
+      <Spacer />
+      <Switch>
+        <Route path={paths.project} component={Project} />
+        <Route path={paths.home} component={Home} exact />
+        <Redirect to={paths.home} />
+      </Switch>
     </div>
   );
 };
