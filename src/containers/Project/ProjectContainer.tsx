@@ -4,7 +4,6 @@ import React, { FC } from 'react';
 // import useProject from 'hooks/use-project';
 import ProjectMain from 'components/Project/ProjectMain';
 // import paths from 'paths';
-import { blankProject } from 'services/projectscore/models/project';
 
 const ProjectContainer: FC = () => {
   // const history = useHistory();
@@ -14,13 +13,8 @@ const ProjectContainer: FC = () => {
   // const { project } = useProject(projectId);
 
   // return project ? <ProjectMain project={project} /> : <div />;
-  const project = {
-    ...blankProject,
-    title: 'test',
-    description: 'test',
-  };
 
-  return <ProjectMain project={project} />;
+  return <ProjectMain />;
 };
 
 export default ProjectContainer;

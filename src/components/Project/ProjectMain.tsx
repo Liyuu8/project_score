@@ -1,26 +1,27 @@
 import React, { FC } from 'react';
-import { Grid, Segment } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 
-import { Project } from 'services/projectscore/models/project';
 import styled from '@emotion/styled';
 import ScoreMain from './ScoreMain';
+import Plots from './Plots';
 
-const ProjectMain: FC<{ project: Project }> = ({ project }) => {
-  const GridWrapper = styled(Grid)`
+const ProjectMain: FC = () => {
+  const StyledGrid = styled(Grid)`
     &&& {
       height: calc(100vh - 67px);
+      padding: 1rem;
     }
   `;
 
   return (
-    <GridWrapper columns={2} divided>
+    <StyledGrid columns={2} divided>
       <Grid.Column width={3}>
-        <Segment>project: {project.title}</Segment>
+        <Plots />
       </Grid.Column>
       <Grid.Column width={13}>
         <ScoreMain />
       </Grid.Column>
-    </GridWrapper>
+    </StyledGrid>
   );
 };
 

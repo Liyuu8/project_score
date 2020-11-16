@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react';
 // import ReactDOM from 'react-dom';
 // import NodeBox from 'components/NodeBox';
+import 'styles/drawflow.css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Drawflow = require('drawflow');
