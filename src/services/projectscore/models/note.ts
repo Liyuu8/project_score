@@ -6,7 +6,7 @@ export type Note = {
   type: string;
   posX: number;
   posY: number;
-  comment: string;
+  findings: string;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -16,7 +16,7 @@ export const blankNote: Note = {
   type: '',
   posX: 0,
   posY: 0,
-  comment: '',
+  findings: '',
   createdAt: null,
   updatedAt: null,
 };
