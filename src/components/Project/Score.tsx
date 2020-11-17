@@ -2,11 +2,16 @@ import React, { FC, useEffect } from 'react';
 
 import createNote from 'components/Project/Note';
 import 'styles/drawflow.css';
+// import { Menu, Popup } from 'semantic-ui-react';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Drawflow = require('drawflow');
 
 const Score: FC = () => {
+  // const [open, setOpen] = useState(false);
+  // const onMenuClick = () => setOpen((prevOpen) => !prevOpen);
+  const onMenuClick = () => console.log('clicked!!');
+
   useEffect(() => {
     const editor = new Drawflow(document.getElementById('drawflow'));
 
@@ -90,6 +95,24 @@ const Score: FC = () => {
     };
 
     editor.start();
+  }, []);
+
+  useEffect(() => {
+    const domContainer = document.querySelectorAll('button.ui.mini.icon');
+    domContainer.forEach((element) => {
+      element.addEventListener('click', onMenuClick);
+      // <Popup basic onClose={() => setOpen(false)} open={open}>
+      //   <Menu
+      //     items={[
+      //       { key: 'copy', content: 'Copy', icon: 'copy' },
+      //       { key: 'code', content: 'View source code', icon: 'code' },
+      //     ]}
+      //     onItemClick={() => setOpen(false)}
+      //     secondary
+      //     vertical
+      //   />
+      // </Popup>;
+    });
   }, []);
 
   return <div id="drawflow" />;
