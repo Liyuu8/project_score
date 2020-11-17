@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Grid } from 'semantic-ui-react';
 
 import styled from '@emotion/styled';
-import ScoreMain from './ScoreMain';
+import Score from './Score';
 import Plots from './Plots';
 
 const ProjectMain: FC = () => {
@@ -19,7 +19,7 @@ const ProjectMain: FC = () => {
         <Plots />
       </Grid.Column>
       <Grid.Column width={13}>
-        <ScoreMain />
+        <Score />
       </Grid.Column>
     </StyledGrid>
   );

@@ -1,25 +1,14 @@
 import React, { FC, useEffect } from 'react';
-// import ReactDOM from 'react-dom';
-// import NodeBox from 'components/NodeBox';
+
+import createNote from 'components/Project/Note';
 import 'styles/drawflow.css';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Drawflow = require('drawflow');
 
-const ScoreMain: FC = () => {
+const Score: FC = () => {
   useEffect(() => {
     const editor = new Drawflow(document.getElementById('drawflow'));
-
-    const noteTemplete = (title: string, content: string) => `
-      <div>
-        <div class="title-box">${title}</div>
-        <div class="box">
-          <p>
-            ${content}
-          </p>
-        </div>
-      </div>
-    `;
 
     editor.drawflow = {
       drawflow: {
@@ -30,7 +19,12 @@ const ScoreMain: FC = () => {
               name: 'measures1',
               data: {},
               class: 'measures1',
-              html: noteTemplete('施策', '施策を記入してください'),
+              html: createNote({
+                title: '施策',
+                content: '施策を記入してください',
+                findings: '得られた知見を入力する',
+                isGood: true,
+              }),
               typenode: false,
               inputs: {},
               outputs: {
@@ -44,7 +38,10 @@ const ScoreMain: FC = () => {
               name: 'intermediateObjective',
               data: {},
               class: 'intermediateObjective',
-              html: noteTemplete('中間目的', '中間目的を記入してください'),
+              html: createNote({
+                title: '中間目的',
+                content: '中間目的を記入してください',
+              }),
               typenode: false,
               inputs: {
                 input_1: { connections: [{ node: '1', input: 'output_1' }] },
@@ -60,7 +57,10 @@ const ScoreMain: FC = () => {
               name: 'victoryConditions',
               data: {},
               class: 'victoryConditions',
-              html: noteTemplete('勝利条件', '勝利条件を記入してください'),
+              html: createNote({
+                title: '勝利条件',
+                content: '勝利条件を記入してください',
+              }),
               typenode: false,
               inputs: {
                 input_1: { connections: [{ node: '2', input: 'output_1' }] },
@@ -74,7 +74,10 @@ const ScoreMain: FC = () => {
               name: 'acquisitionGoal',
               data: {},
               class: 'acquisitionGoal',
-              html: noteTemplete('獲得目標', '獲得目標を記入してください'),
+              html: createNote({
+                title: '獲得目標',
+                content: '獲得目標を記入してください',
+              }),
               typenode: false,
               inputs: {},
               outputs: {},
@@ -87,19 +90,9 @@ const ScoreMain: FC = () => {
     };
 
     editor.start();
-
-    // const domContainer = document.querySelectorAll(
-    //   '.NodeBox .drawflow_content_node'
-    // );
-    // domContainer.forEach((element) => {
-    //   ReactDOM.render(
-    //     React.createElement(NodeBox, { toWhat: 'World' }, null),
-    //     element
-    //   );
-    // });
   }, []);
 
   return <div id="drawflow" />;
 };
 
-export default ScoreMain;
+export default Score;
