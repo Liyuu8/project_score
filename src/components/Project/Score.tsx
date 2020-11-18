@@ -1,121 +1,129 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import ReactFlow, {
+  removeElements,
+  addEdge,
+  Controls,
+  Elements,
+  Position,
+  Connection,
+  Edge,
+  FlowElement,
+} from 'react-flow-renderer';
 
-import createNote from 'components/Project/Note';
-import 'styles/drawflow.css';
-// import { Menu, Popup } from 'semantic-ui-react';
+import Note from './Note';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Drawflow = require('drawflow');
+const initialElements = [
+  {
+    id: 'measures1',
+    type: 'noteNode',
+    data: {
+      title: '施策',
+      content: '施策を記入してください',
+      findings: '得られた知見を入力する',
+      isGood: true,
+      hasTarget: false,
+      hasSource: true,
+    },
+    position: { x: 50, y: 50 },
+    sourcePosition: Position.Right,
+  },
+  {
+    id: 'measures2',
+    type: 'noteNode',
+    data: {
+      title: '施策',
+      content: '施策を記入してください',
+      findings: '得られた知見を入力する',
+      isGood: false,
+      hasTarget: false,
+      hasSource: true,
+    },
+    position: { x: 50, y: 250 },
+    sourcePosition: Position.Right,
+  },
+  {
+    id: 'intermediateObjective1',
+    type: 'noteNode',
+    data: {
+      title: '中間目的',
+      content: '中間目的を記入してください',
+      hasTarget: true,
+      hasSource: true,
+    },
+    position: { x: 450, y: 50 },
+  },
+  {
+    id: 'victoryConditions1',
+    type: 'noteNode',
+    data: {
+      title: '勝利条件',
+      content: '勝利条件を記入してください',
+      hasTarget: true,
+      hasSource: false,
+    },
+    position: { x: 850, y: 50 },
+  },
+  {
+    id: 'acquisitionGoal',
+    type: 'noteNode',
+    data: {
+      title: '獲得目標',
+      content: '獲得目標を記入してください',
+      hasTarget: false,
+      hasSource: false,
+    },
+    position: { x: 850, y: 450 },
+  },
+  {
+    id: 'm1-i1',
+    source: 'measures1',
+    target: 'intermediateObjective1',
+    animated: true,
+    style: { stroke: '#fff', strokeWidth: '3px' },
+  },
+  {
+    id: 'i1-v1',
+    source: 'intermediateObjective1',
+    target: 'victoryConditions1',
+    animated: true,
+    style: { stroke: '#fff', strokeWidth: '3px' },
+  },
+];
 
 const Score: FC = () => {
-  // const [open, setOpen] = useState(false);
-  // const onMenuClick = () => setOpen((prevOpen) => !prevOpen);
-  const onMenuClick = () => console.log('clicked!!');
-
+  const [elements, setElements] = useState<Elements>([]);
   useEffect(() => {
-    const editor = new Drawflow(document.getElementById('drawflow'));
-
-    editor.drawflow = {
-      drawflow: {
-        Home: {
-          data: {
-            1: {
-              id: 1,
-              name: 'measures1',
-              data: {},
-              class: 'measures1',
-              html: createNote({
-                title: '施策',
-                content: '施策を記入してください',
-                findings: '得られた知見を入力する',
-                isGood: true,
-              }),
-              typenode: false,
-              inputs: {},
-              outputs: {
-                output_1: { connections: [{ node: '2', input: 'input_1' }] },
-              },
-              pos_x: 50,
-              pos_y: 50,
-            },
-            2: {
-              id: 2,
-              name: 'intermediateObjective',
-              data: {},
-              class: 'intermediateObjective',
-              html: createNote({
-                title: '中間目的',
-                content: '中間目的を記入してください',
-              }),
-              typenode: false,
-              inputs: {
-                input_1: { connections: [{ node: '1', input: 'output_1' }] },
-              },
-              outputs: {
-                output_1: { connections: [{ node: '3', input: 'input_1' }] },
-              },
-              pos_x: 450,
-              pos_y: 50,
-            },
-            3: {
-              id: 3,
-              name: 'victoryConditions',
-              data: {},
-              class: 'victoryConditions',
-              html: createNote({
-                title: '勝利条件',
-                content: '勝利条件を記入してください',
-              }),
-              typenode: false,
-              inputs: {
-                input_1: { connections: [{ node: '2', input: 'output_1' }] },
-              },
-              outputs: {},
-              pos_x: 850,
-              pos_y: 50,
-            },
-            4: {
-              id: 4,
-              name: 'acquisitionGoal',
-              data: {},
-              class: 'acquisitionGoal',
-              html: createNote({
-                title: '獲得目標',
-                content: '獲得目標を記入してください',
-              }),
-              typenode: false,
-              inputs: {},
-              outputs: {},
-              pos_x: 850,
-              pos_y: 450,
-            },
-          },
-        },
-      },
-    };
-
-    editor.start();
+    setElements(initialElements);
   }, []);
 
-  useEffect(() => {
-    const domContainer = document.querySelectorAll('button.ui.mini.icon');
-    domContainer.forEach((element) => {
-      element.addEventListener('click', onMenuClick);
-      // <Popup basic onClose={() => setOpen(false)} open={open}>
-      //   <Menu
-      //     items={[
-      //       { key: 'copy', content: 'Copy', icon: 'copy' },
-      //       { key: 'code', content: 'View source code', icon: 'code' },
-      //     ]}
-      //     onItemClick={() => setOpen(false)}
-      //     secondary
-      //     vertical
-      //   />
-      // </Popup>;
-    });
-  }, []);
-
-  return <div id="drawflow" />;
+  return (
+    <ReactFlow
+      elements={elements}
+      onElementClick={(
+        event: React.MouseEvent<Element, MouseEvent>,
+        element: FlowElement
+      ): void => console.log('click', element, event)}
+      onElementsRemove={(elementsToRemove: Elements) =>
+        setElements((els) => removeElements(elementsToRemove, els))
+      }
+      onConnect={(params: Edge | Connection) =>
+        setElements((els) =>
+          addEdge({ ...params, animated: true, style: { stroke: '#fff' } }, els)
+        )
+      }
+      style={{ background: '#cacaca' }}
+      onLoad={(reactFlowInstance: any) => {
+        console.log('flow loaded:', reactFlowInstance);
+        setTimeout(() => reactFlowInstance.fitView(), 1);
+      }}
+      nodeTypes={{ noteNode: Note }}
+      connectionLineStyle={{ stroke: '#fff' }}
+      snapToGrid
+      defaultZoom={1.5}
+    >
+      <Controls />
+    </ReactFlow>
+  );
 };
 
 export default Score;

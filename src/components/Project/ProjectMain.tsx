@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Grid } from 'semantic-ui-react';
-
 import styled from '@emotion/styled';
+
 import Score from './Score';
 import Plots from './Plots';
 
