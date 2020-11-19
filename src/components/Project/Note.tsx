@@ -7,8 +7,11 @@ interface Props {
   data: {
     title: string;
     content: string;
-    findings?: string;
-    isGood?: boolean;
+    findings?: {
+      id: string;
+      title: string;
+      isGood: boolean;
+    }[];
     hasTarget: boolean;
     hasSource: boolean;
   };
@@ -34,7 +37,6 @@ const Note: FC<Props> = ({ data }) => {
         title={data.title}
         content={data.content}
         findings={data.findings}
-        isGood={data.isGood}
       />
       {data.hasSource && (
         <Handle

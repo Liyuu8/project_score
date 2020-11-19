@@ -19,8 +19,13 @@ const initialElements = [
     data: {
       title: '施策',
       content: '施策を記入してください',
-      findings: '得られた知見を入力する',
-      isGood: true,
+      findings: [
+        {
+          id: 'findings11',
+          title: '得られた知見を入力する',
+          isGood: true,
+        },
+      ],
       hasTarget: false,
       hasSource: true,
     },
@@ -33,8 +38,13 @@ const initialElements = [
     data: {
       title: '施策',
       content: '施策を記入してください',
-      findings: '得られた知見を入力する',
-      isGood: false,
+      findings: [
+        {
+          id: 'findings21',
+          title: '得られた知見を入力する',
+          isGood: false,
+        },
+      ],
       hasTarget: false,
       hasSource: true,
     },

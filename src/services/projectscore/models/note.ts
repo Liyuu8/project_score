@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { Finding } from './finding';
 
 export type Note = {
   id?: string;
@@ -6,7 +7,8 @@ export type Note = {
   type: string;
   posX: number;
   posY: number;
-  findings: string;
+  findingIds: string[];
+  findings: Finding[];
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -16,7 +18,8 @@ export const blankNote: Note = {
   type: '',
   posX: 0,
   posY: 0,
-  findings: '',
+  findingIds: [],
+  findings: [],
   createdAt: null,
   updatedAt: null,
 };
