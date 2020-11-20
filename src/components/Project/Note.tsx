@@ -30,7 +30,7 @@ const Note: FC<Props> = ({ data }) => {
             borderColor: '#aaa',
             borderWidth: '2px',
           }}
-          onConnect={(params) => console.log('left handle onConnect', params)}
+          // onConnect={(params) => console.log('left handle onConnect', params)}
         />
       )}
       <NoteCore
@@ -48,7 +48,7 @@ const Note: FC<Props> = ({ data }) => {
             borderColor: '#aaa',
             borderWidth: '2px',
           }}
-          onConnect={(params) => console.log('right handle onConnect', params)}
+          // onConnect={(params) => console.log('right handle onConnect', params)}
         />
       )}
     </>

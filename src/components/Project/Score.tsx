@@ -8,9 +8,16 @@ import ReactFlow, {
   Connection,
   Edge,
   FlowElement,
+  ReactFlowProvider,
 } from 'react-flow-renderer';
 
 import Note from './Note';
+
+interface Props {
+  stageNumber: number;
+}
+
+const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 
 const initialElements = [
   {
@@ -89,50 +96,65 @@ const initialElements = [
     source: 'measures1',
     target: 'intermediateObjective1',
     animated: true,
-    style: { stroke: '#fff', strokeWidth: '3px' },
+    style: strokeStyle,
   },
   {
     id: 'i1-v1',
     source: 'intermediateObjective1',
     target: 'victoryConditions1',
     animated: true,
-    style: { stroke: '#fff', strokeWidth: '3px' },
+    style: strokeStyle,
+  },
+];
+const initialElements2 = [
+  ...initialElements,
+  {
+    id: 'intermediateObjective2',
+    type: 'noteNode',
+    data: {
+      title: '中間目的',
+      content: '中間目的を記入してください',
+      hasTarget: true,
+      hasSource: true,
+    },
+    position: { x: 450, y: 250 },
   },
 ];
 
-const Score: FC = () => {
+const Score: FC<Props> = ({ stageNumber }) => {
   const [elements, setElements] = useState<Elements>([]);
   useEffect(() => {
-    setElements(initialElements);
+    setElements(stageNumber === 1 ? initialElements : initialElements2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <ReactFlow
-      elements={elements}
-      onElementClick={(
-        event: React.MouseEvent<Element, MouseEvent>,
-        element: FlowElement
-      ): void => console.log('click', element, event)}
-      onElementsRemove={(elementsToRemove: Elements) =>
-        setElements((els) => removeElements(elementsToRemove, els))
-      }
-      onConnect={(params: Edge | Connection) =>
-        setElements((els) =>
-          addEdge({ ...params, animated: true, style: { stroke: '#fff' } }, els)
-        )
-      }
-      style={{ background: '#cacaca' }}
-      onLoad={(reactFlowInstance: any) => {
-        console.log('flow loaded:', reactFlowInstance);
-        setTimeout(() => reactFlowInstance.fitView(), 1);
-      }}
-      nodeTypes={{ noteNode: Note }}
-      connectionLineStyle={{ stroke: '#fff' }}
-      snapToGrid
-      defaultZoom={1.5}
-    >
-      <Controls />
-    </ReactFlow>
+    <ReactFlowProvider>
+      <ReactFlow
+        elements={elements}
+        onElementClick={(
+          event: React.MouseEvent<Element, MouseEvent>,
+          element: FlowElement
+        ): void => console.log('click', element, event)}
+        onElementsRemove={(elementsToRemove: Elements) =>
+          setElements((element) => removeElements(elementsToRemove, element))
+        }
+        onConnect={(params: Edge | Connection) =>
+          setElements((element) =>
+            addEdge({ ...params, animated: true, style: strokeStyle }, element)
+          )
+        }
+        style={{
+          background: '#cacaca',
+          height: 'calc(100vh - 180px)',
+        }}
+        nodeTypes={{ noteNode: Note }}
+        connectionLineStyle={{ stroke: '#fff' }}
+        onlyRenderVisibleElements={false}
+      >
+        <Controls />
+      </ReactFlow>
+    </ReactFlowProvider>
   );
 };
 
