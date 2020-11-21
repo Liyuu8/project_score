@@ -36,7 +36,7 @@ const initialElements = [
       hasTarget: false,
       hasSource: true,
     },
-    position: { x: 50, y: 50 },
+    position: { x: 50, y: 25 },
     sourcePosition: Position.Right,
   },
   {
@@ -67,7 +67,7 @@ const initialElements = [
       hasTarget: true,
       hasSource: true,
     },
-    position: { x: 450, y: 50 },
+    position: { x: 450, y: 25 },
   },
   {
     id: 'victoryConditions1',
@@ -78,7 +78,7 @@ const initialElements = [
       hasTarget: true,
       hasSource: false,
     },
-    position: { x: 850, y: 50 },
+    position: { x: 850, y: 25 },
   },
   {
     id: 'acquisitionGoal',
@@ -89,7 +89,7 @@ const initialElements = [
       hasTarget: false,
       hasSource: false,
     },
-    position: { x: 850, y: 450 },
+    position: { x: 850, y: 340 },
   },
   {
     id: 'm1-i1',
@@ -117,7 +117,7 @@ const initialElements2 = [
       hasTarget: true,
       hasSource: true,
     },
-    position: { x: 450, y: 250 },
+    position: { x: 450, y: 240 },
   },
 ];
 
@@ -146,7 +146,7 @@ const Score: FC<Props> = ({ stageNumber }) => {
         }
         style={{
           background: '#EDEDED',
-          height: 'calc(100vh - 180px)',
+          height: 'calc(100vh - 290px)',
         }}
         nodeTypes={{ noteNode: Note }}
         connectionLineStyle={{ stroke: '#fff' }}

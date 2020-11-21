@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { Button, Grid, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import Score from './Score';
+import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 
 interface Panes {
@@ -13,7 +13,6 @@ interface Panes {
 const ProjectMain: FC = () => {
   const StyledGrid = styled(Grid)`
     &&& {
-      height: calc(100vh - 900px);
       padding: 1rem;
     }
   `;
@@ -29,7 +28,7 @@ const ProjectMain: FC = () => {
       pane: {
         key: '1',
         attached: false,
-        content: <Score stageNumber={1} />,
+        content: <ScoreBoard stageNumber={1} />,
       },
     },
     {
@@ -37,13 +36,16 @@ const ProjectMain: FC = () => {
       pane: {
         key: '2',
         attached: false,
-        content: <Score stageNumber={2} />,
+        content: <ScoreBoard stageNumber={2} />,
       },
     },
   ]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const addStage = () => {
+    if (panes.length > 5) {
+      return;
+    }
     const newPanes = [...panes];
     const newStageIndex = parseInt(panes[panes.length - 1].pane.key, 10) + 1;
     newPanes.push({
@@ -51,7 +53,7 @@ const ProjectMain: FC = () => {
       pane: {
         key: `${newStageIndex}`,
         attached: false,
-        content: <Score stageNumber={newStageIndex} />,
+        content: <ScoreBoard stageNumber={newStageIndex} />,
       },
     });
     setPanes(newPanes);
@@ -59,6 +61,9 @@ const ProjectMain: FC = () => {
   };
 
   const removeStage = () => {
+    if (panes.length === 1) {
+      return;
+    }
     const newPanes = [...panes];
     newPanes.splice(activeIndex, 1);
     setPanes(newPanes);
@@ -66,10 +71,7 @@ const ProjectMain: FC = () => {
   };
 
   return (
-    <StyledGrid columns={2}>
-      <Grid.Column width={3}>
-        <Plots />
-      </Grid.Column>
+    <StyledGrid doubling columns={2}>
       <Grid.Column width={13}>
         <StyledButtonGroup floated="right" size="large">
           <Popup
@@ -101,6 +103,9 @@ const ProjectMain: FC = () => {
             setActiveIndex(index);
           }}
         />
+      </Grid.Column>
+      <Grid.Column width={3}>
+        <Plots />
       </Grid.Column>
     </StyledGrid>
   );
