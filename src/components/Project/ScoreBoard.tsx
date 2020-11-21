@@ -3,6 +3,7 @@ import { Button, Form, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import Score from './Score';
+import ModalTriggerButton from './ModalTriggerButton';
 
 interface Props {
   stageNumber: number;
@@ -26,23 +27,26 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
       <Score stageNumber={stageNumber} />
       <StyledGrid doubling columns={2}>
         <Grid.Column width={6} verticalAlign="middle">
-          <StyledButton
-            icon="add"
+          <ModalTriggerButton
             label="施策"
-            labelPosition="left"
-            onClick={() => null}
+            value=""
+            button={
+              <StyledButton icon="add" label="施策" labelPosition="left" />
+            }
           />
-          <StyledButton
-            icon="add"
+          <ModalTriggerButton
             label="中間目標"
-            labelPosition="left"
-            onClick={() => null}
+            value=""
+            button={
+              <StyledButton icon="add" label="中間目標" labelPosition="left" />
+            }
           />
-          <StyledButton
-            icon="add"
+          <ModalTriggerButton
             label="勝利条件"
-            labelPosition="left"
-            onClick={() => null}
+            value=""
+            button={
+              <StyledButton icon="add" label="勝利条件" labelPosition="left" />
+            }
           />
         </Grid.Column>
         <Grid.Column width={10}>
