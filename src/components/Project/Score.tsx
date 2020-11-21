@@ -145,7 +145,7 @@ const Score: FC<Props> = ({ stageNumber }) => {
           )
         }
         style={{
-          background: '#cacaca',
+          background: '#EDEDED',
           height: 'calc(100vh - 180px)',
         }}
         nodeTypes={{ noteNode: Note }}

@@ -1,9 +1,14 @@
-import React, { FC } from 'react';
-import { Grid, Tab } from 'semantic-ui-react';
+import React, { FC, useState } from 'react';
+import { Button, Grid, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import Score from './Score';
 import Plots from './Plots';
+
+interface Panes {
+  pane: { key: string; attached: boolean; content: any };
+  menuItem: string | { key: string; icon: string };
+}
 
 const ProjectMain: FC = () => {
   const StyledGrid = styled(Grid)`
@@ -12,12 +17,17 @@ const ProjectMain: FC = () => {
       padding: 1rem;
     }
   `;
+  const StyledButtonGroup = styled(Button.Group)`
+    &&& {
+      margin-left: 1rem;
+    }
+  `;
 
-  const panes = [
+  const [panes, setPanes] = useState<Panes[]>([
     {
       menuItem: 'Stage 1',
       pane: {
-        key: 'stage1',
+        key: '1',
         attached: false,
         content: <Score stageNumber={1} />,
       },
@@ -25,12 +35,35 @@ const ProjectMain: FC = () => {
     {
       menuItem: 'Stage 2',
       pane: {
-        key: 'stage2',
+        key: '2',
         attached: false,
         content: <Score stageNumber={2} />,
       },
     },
-  ];
+  ]);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  const addStage = () => {
+    const newPanes = [...panes];
+    const newStageIndex = parseInt(panes[panes.length - 1].pane.key, 10) + 1;
+    newPanes.push({
+      menuItem: `Stage ${newStageIndex}`,
+      pane: {
+        key: `${newStageIndex}`,
+        attached: false,
+        content: <Score stageNumber={newStageIndex} />,
+      },
+    });
+    setPanes(newPanes);
+    setActiveIndex(panes.length);
+  };
+
+  const removeStage = () => {
+    const newPanes = [...panes];
+    newPanes.splice(activeIndex, 1);
+    setPanes(newPanes);
+    setActiveIndex(0);
+  };
 
   return (
     <StyledGrid columns={2}>
@@ -38,7 +71,36 @@ const ProjectMain: FC = () => {
         <Plots />
       </Grid.Column>
       <Grid.Column width={13}>
-        <Tab menu={{ pointing: true }} panes={panes} renderActiveOnly={false} />
+        <StyledButtonGroup floated="right" size="large">
+          <Popup
+            content="Add new stage"
+            trigger={<Button icon="add" onClick={addStage} />}
+          />
+          <Popup
+            content="Delete stage"
+            trigger={<Button icon="delete" onClick={removeStage} />}
+          />
+        </StyledButtonGroup>
+        <Tab
+          menu={{ pointing: true }}
+          panes={panes}
+          renderActiveOnly={false}
+          activeIndex={activeIndex}
+          onTabChange={(event, data) => {
+            let index;
+            switch (typeof data.activeIndex) {
+              case 'string':
+                index = parseInt(data.activeIndex, 10);
+                break;
+              case 'number':
+                index = data.activeIndex;
+                break;
+              default:
+                index = 0;
+            }
+            setActiveIndex(index);
+          }}
+        />
       </Grid.Column>
     </StyledGrid>
   );
