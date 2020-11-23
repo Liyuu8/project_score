@@ -7,7 +7,6 @@ import ReactFlow, {
   Position,
   Connection,
   Edge,
-  FlowElement,
   ReactFlowProvider,
 } from 'react-flow-renderer';
 
@@ -21,9 +20,10 @@ const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 
 const initialElements = [
   {
-    id: 'measures1',
+    id: 'measure1',
     type: 'noteNode',
     data: {
+      id: 'measure1',
       title: '施策',
       content: '施策を記入してください',
       findings: [
@@ -40,9 +40,10 @@ const initialElements = [
     sourcePosition: Position.Right,
   },
   {
-    id: 'measures2',
+    id: 'measure2',
     type: 'noteNode',
     data: {
+      id: 'measure2',
       title: '施策',
       content: '施策を記入してください',
       findings: [
@@ -62,6 +63,7 @@ const initialElements = [
     id: 'intermediateObjective1',
     type: 'noteNode',
     data: {
+      id: 'intermediateObjective1',
       title: '中間目的',
       content: '中間目的を記入してください',
       hasTarget: true,
@@ -70,9 +72,10 @@ const initialElements = [
     position: { x: 450, y: 25 },
   },
   {
-    id: 'victoryConditions1',
+    id: 'victoryCondition1',
     type: 'noteNode',
     data: {
+      id: 'victoryCondition1',
       title: '勝利条件',
       content: '勝利条件を記入してください',
       hasTarget: true,
@@ -84,6 +87,7 @@ const initialElements = [
     id: 'acquisitionGoal',
     type: 'noteNode',
     data: {
+      id: 'acquisitionGoal',
       title: '獲得目標',
       content: '獲得目標を記入してください',
       hasTarget: false,
@@ -93,7 +97,7 @@ const initialElements = [
   },
   {
     id: 'm1-i1',
-    source: 'measures1',
+    source: 'measure1',
     target: 'intermediateObjective1',
     animated: true,
     style: strokeStyle,
@@ -101,7 +105,7 @@ const initialElements = [
   {
     id: 'i1-v1',
     source: 'intermediateObjective1',
-    target: 'victoryConditions1',
+    target: 'victoryCondition1',
     animated: true,
     style: strokeStyle,
   },
@@ -112,6 +116,7 @@ const initialElements2 = [
     id: 'intermediateObjective2',
     type: 'noteNode',
     data: {
+      id: 'intermediateObjective2',
       title: '中間目的',
       content: '中間目的を記入してください',
       hasTarget: true,
@@ -132,10 +137,10 @@ const Score: FC<Props> = ({ stageNumber }) => {
     <ReactFlowProvider>
       <ReactFlow
         elements={elements}
-        onElementClick={(
-          event: React.MouseEvent<Element, MouseEvent>,
-          element: FlowElement
-        ): void => console.log('click', element, event)}
+        // onElementClick={(
+        //   event: React.MouseEvent<Element, MouseEvent>,
+        //   element: FlowElement
+        // ): void => console.log('click', element, event)}
         onElementsRemove={(elementsToRemove: Elements) =>
           setElements((element) => removeElements(elementsToRemove, element))
         }

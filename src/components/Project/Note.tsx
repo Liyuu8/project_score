@@ -5,6 +5,7 @@ import NoteCore from './NoteCore';
 
 interface Props {
   data: {
+    id: string;
     title: string;
     content: string;
     findings?: {
@@ -34,6 +35,7 @@ const Note: FC<Props> = ({ data }) => {
         />
       )}
       <NoteCore
+        id={data.id}
         title={data.title}
         content={data.content}
         findings={data.findings}

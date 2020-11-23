@@ -1,37 +1,59 @@
 import React, { FC, useState } from 'react';
-import { Button, Header, Icon, Modal } from 'semantic-ui-react';
+import { Button, Form, Header, Icon, Modal, TextArea } from 'semantic-ui-react';
 
 interface Props {
+  id: string;
   label: string;
-  value: string;
+  content?: string;
   button: React.ReactNode;
+  onActionClick: (isSubmitted: boolean, content: string) => void;
 }
 
-const ModalTriggerButton: FC<Props> = ({ label, value, button }) => {
-  const [open, setOpen] = useState(false);
-  const onOpen = () => setOpen(true);
-  const onClose = () => setOpen(false);
+const ModalTriggerButton: FC<Props> = ({
+  id,
+  label,
+  content = '',
+  button,
+  onActionClick,
+}) => {
+  const headerContent = `${label}の${!content ? '追加' : '変更'}`;
+  const [formContent, setFormContent] = useState(content);
+  const [openedModalKey, setOpenedModalKey] = useState('');
 
-  const headerContent = `${label}の${!value ? '追加' : '変更'}`;
+  const handleClick = (isSubmitted: boolean) => {
+    onActionClick(isSubmitted, formContent);
+    if (openedModalKey) {
+      setOpenedModalKey('');
+    }
+  };
 
   return (
     <Modal
       closeIcon
-      open={open}
       trigger={button}
-      onClose={onClose}
-      onOpen={onOpen}
+      size="tiny"
+      open={openedModalKey === id}
+      onOpen={() => setOpenedModalKey(id)}
+      onClose={() => setOpenedModalKey('')}
     >
-      <Header icon="archive" content={headerContent} />
+      <Header icon="edit" content={headerContent} />
       <Modal.Content>
-        <p>value is {value}</p>
+        <Form>
+          <TextArea
+            placeholder="記入欄"
+            value={formContent}
+            onChange={(e, { value }) =>
+              setFormContent(value ? value.toString() : '')
+            }
+          />
+        </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="red" onClick={onClose}>
-          <Icon name="remove" /> No
+        <Button color="red" onClick={() => handleClick(false)}>
+          <Icon name="remove" /> キャンセル
         </Button>
-        <Button color="green" onClick={onClose}>
-          <Icon name="checkmark" /> Yes
+        <Button color="green" onClick={() => handleClick(true)}>
+          <Icon name="checkmark" /> 決定
         </Button>
       </Modal.Actions>
     </Modal>

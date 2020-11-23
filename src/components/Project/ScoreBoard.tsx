@@ -28,24 +28,33 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
       <StyledGrid doubling columns={2}>
         <Grid.Column width={6} verticalAlign="middle">
           <ModalTriggerButton
+            id="newMeasure"
             label="施策"
-            value=""
             button={
               <StyledButton icon="add" label="施策" labelPosition="left" />
             }
-          />
-          <ModalTriggerButton
-            label="中間目標"
-            value=""
-            button={
-              <StyledButton icon="add" label="中間目標" labelPosition="left" />
+            onActionClick={(isSubmitted, content) =>
+              isSubmitted && console.log('newMeasure is', content)
             }
           />
           <ModalTriggerButton
+            id="newIntermediateObjective"
+            label="中間目標"
+            button={
+              <StyledButton icon="add" label="中間目標" labelPosition="left" />
+            }
+            onActionClick={(isSubmitted, content) =>
+              isSubmitted && console.log('newIntermediateObjective is', content)
+            }
+          />
+          <ModalTriggerButton
+            id="newVictoryCondition"
             label="勝利条件"
-            value=""
             button={
               <StyledButton icon="add" label="勝利条件" labelPosition="left" />
+            }
+            onActionClick={(isSubmitted, content) =>
+              isSubmitted && console.log('newVictoryCondition is', content)
             }
           />
         </Grid.Column>

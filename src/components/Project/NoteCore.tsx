@@ -1,10 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import ModalTriggerButton from './ModalTriggerButton';
 
 interface Property {
+  id: string;
   title: string;
   content: string;
   findings?: {
@@ -14,33 +15,60 @@ interface Property {
   }[];
 }
 
-const NoteCore: FC<Property> = ({ title, content, findings = [] }) => {
+const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
   const [property, setProperty] = useState<Property>({
+    id,
     title,
     content,
     findings,
   });
+  const [openedPopupKey, setOpenedPopupKey] = useState('');
+  const onPopupClose = () => setOpenedPopupKey('');
 
-  // const addFinding = (isGood: boolean) => {
-  //   const newFindings = [
-  //     ...property.findings,
-  //     {
-  //       id: `findings${property.findings ? property.findings.length + 1 : 0}`,
-  //       title: '新しく追加された知見',
-  //       isGood,
-  //     },
-  //   ];
-  //   setProperty({ ...property, findings: newFindings });
-  // };
-  // const editFinding = (index: number) => {
-  //   const newFindings = [...property.findings];
-  //   newFindings[index].title = '編集された知見';
-  //   setProperty({ ...property, findings: newFindings });
-  // };
+  useEffect(() => {
+    const popupCloseEvent = (ev: MouseEvent) =>
+      !['.modal', '.popupTrigger', '.popup'].some((value) =>
+        (ev.target as HTMLTextAreaElement).closest(value)
+      ) && onPopupClose();
+
+    document.addEventListener('click', popupCloseEvent);
+
+    return () => document.removeEventListener('click', popupCloseEvent);
+  }, []);
+
+  const editNoteContent = (newContent: string) => {
+    setProperty({ ...property, content: newContent });
+  };
+
+  const addFinding = (findingTitle: string, isGood: boolean) => {
+    const newFindings = [
+      ...property.findings,
+      {
+        id: `findings${property.findings ? property.findings.length + 1 : 0}`,
+        title: findingTitle,
+        isGood,
+      },
+    ];
+    setProperty({ ...property, findings: newFindings });
+  };
+  const editFinding = (findingTitle: string, index: number) => {
+    const newFindings = [...property.findings];
+    newFindings[index].title = findingTitle;
+    setProperty({ ...property, findings: newFindings });
+  };
   const removeFinding = (index: number) => {
     const newFindings = [...property.findings];
     newFindings.splice(index, 1);
     setProperty({ ...property, findings: newFindings });
+  };
+
+  const handleModalAction = (
+    popupButtonPushedAction: (newContent: string) => void
+  ) => (isSubmitted: boolean, submittedContent: string) => {
+    if (isSubmitted) {
+      popupButtonPushedAction(submittedContent);
+    }
+    onPopupClose();
   };
 
   const StyledTable = styled(Table)`
@@ -77,26 +105,44 @@ const NoteCore: FC<Property> = ({ title, content, findings = [] }) => {
         <Table.Row>
           <Table.Cell>
             <Popup
-              trigger={<Pointer>{property.content}</Pointer>}
+              key={property.id}
+              trigger={
+                <Pointer className="popupTrigger">{property.content}</Pointer>
+              }
               on="click"
               position="top center"
               style={popupStyle}
+              open={openedPopupKey === property.id}
+              onOpen={() => setOpenedPopupKey(property.id)}
+              onClose={onPopupClose}
+              // モーダルクリック時に閉じてしまうので、クリックイベントハンドラを別途実装する（popupCloseEvent）
+              closeOnDocumentClick={false}
             >
               <Button.Group>
                 <ModalTriggerButton
+                  id={property.id}
                   label={property.title}
-                  value={property.content}
+                  content={property.content}
                   button={<Button icon="edit" />}
+                  onActionClick={handleModalAction((newContent) =>
+                    editNoteContent(newContent)
+                  )}
                 />
                 <ModalTriggerButton
+                  id="newGoodFinding"
                   label="得られた知見"
-                  value=""
                   button={<Button icon="thumbs up outline" />}
+                  onActionClick={handleModalAction((newContent) =>
+                    addFinding(newContent, true)
+                  )}
                 />
                 <ModalTriggerButton
+                  id="newBadFinding"
                   label="得られた知見"
-                  value=""
                   button={<Button icon="thumbs down outline" />}
+                  onActionClick={handleModalAction((newContent) =>
+                    addFinding(newContent, false)
+                  )}
                 />
                 <Button icon="delete" />
               </Button.Group>
@@ -111,18 +157,29 @@ const NoteCore: FC<Property> = ({ title, content, findings = [] }) => {
                   key={finding.id}
                   trigger={
                     <Segment color={finding.isGood ? 'blue' : 'red'} raised>
-                      <Pointer>{finding.title}</Pointer>
+                      <Pointer className="popupTrigger">
+                        {finding.title}
+                      </Pointer>
                     </Segment>
                   }
                   on="click"
                   position="top center"
                   style={popupStyle}
+                  open={openedPopupKey === finding.id}
+                  onOpen={() => setOpenedPopupKey(finding.id)}
+                  onClose={onPopupClose}
+                  // モーダルクリック時に閉じてしまうので、クリックイベントハンドラを別途実装する（popupCloseEvent）
+                  closeOnDocumentClick={false}
                 >
                   <Button.Group>
                     <ModalTriggerButton
+                      id={finding.id}
                       label="得られた知見"
-                      value={finding.title}
+                      content={finding.title}
                       button={<Button icon="edit" />}
+                      onActionClick={handleModalAction((newContent) =>
+                        editFinding(newContent, index)
+                      )}
                     />
                     <Button
                       icon="delete"
