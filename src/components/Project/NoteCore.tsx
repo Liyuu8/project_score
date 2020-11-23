@@ -3,6 +3,7 @@ import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import ModalForAddOrEdit from './ModalForAddOrEdit';
+import ModalForDelete from './ModalForDelete';
 
 interface Property {
   id: string;
@@ -39,6 +40,11 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
   const editNoteContent = (newContent: string) => {
     setProperty({ ...property, content: newContent });
   };
+  const removeNoteContent = () => {
+    // TODO: Firebaseから削除
+    console.log(`「${property.content}」が削除されました`);
+    setProperty({ ...property, content: '', findings: [] });
+  };
 
   const addFinding = (findingTitle: string, isGood: boolean) => {
     const newFindings = [
@@ -62,11 +68,19 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
     setProperty({ ...property, findings: newFindings });
   };
 
-  const handleModalAction = (
+  const handleModalActionForAddOrEdit = (
     popupButtonPushedAction: (newContent: string) => void
   ) => (isSubmitted: boolean, submittedContent: string) => {
     if (isSubmitted) {
       popupButtonPushedAction(submittedContent);
+    }
+    onPopupClose();
+  };
+  const handleModalActionForDelete = (popupButtonPushedAction: () => void) => (
+    isSubmitted: boolean
+  ) => {
+    if (isSubmitted) {
+      popupButtonPushedAction();
     }
     onPopupClose();
   };
@@ -124,7 +138,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   label={property.title}
                   content={property.content}
                   button={<Button icon="edit" />}
-                  onActionClick={handleModalAction((newContent) =>
+                  onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     editNoteContent(newContent)
                   )}
                 />
@@ -132,7 +146,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   id="newGoodFinding"
                   label="得られた知見"
                   button={<Button icon="thumbs up outline" />}
-                  onActionClick={handleModalAction((newContent) =>
+                  onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     addFinding(newContent, true)
                   )}
                 />
@@ -140,11 +154,19 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   id="newBadFinding"
                   label="得られた知見"
                   button={<Button icon="thumbs down outline" />}
-                  onActionClick={handleModalAction((newContent) =>
+                  onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     addFinding(newContent, false)
                   )}
                 />
-                <Button icon="delete" />
+                <ModalForDelete
+                  id={property.id}
+                  label={property.title}
+                  content={property.content}
+                  button={<Button icon="trash" />}
+                  onActionClick={handleModalActionForDelete(() =>
+                    removeNoteContent()
+                  )}
+                />
               </Button.Group>
             </Popup>
           </Table.Cell>
@@ -177,13 +199,18 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                       label="得られた知見"
                       content={finding.title}
                       button={<Button icon="edit" />}
-                      onActionClick={handleModalAction((newContent) =>
-                        editFinding(newContent, index)
+                      onActionClick={handleModalActionForAddOrEdit(
+                        (newContent) => editFinding(newContent, index)
                       )}
                     />
-                    <Button
-                      icon="delete"
-                      onClick={() => removeFinding(index)}
+                    <ModalForDelete
+                      id={finding.id}
+                      label="得られた知見"
+                      content={finding.title}
+                      button={<Button icon="trash" />}
+                      onActionClick={handleModalActionForDelete(() =>
+                        removeFinding(index)
+                      )}
                     />
                   </Button.Group>
                 </Popup>
