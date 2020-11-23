@@ -39,10 +39,10 @@ const ModalForDelete: FC<Props> = ({
         <p>{content}</p>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="red" onClick={() => handleClick(false)}>
+        <Button color="grey" onClick={() => handleClick(false)}>
           <Icon name="remove" /> キャンセル
         </Button>
-        <Button color="green" onClick={() => handleClick(true)}>
+        <Button color="red" onClick={() => handleClick(true)}>
           <Icon name="checkmark" /> 削除
         </Button>
       </Modal.Actions>
