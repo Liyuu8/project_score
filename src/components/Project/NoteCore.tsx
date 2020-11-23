@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import ModalTriggerButton from './ModalTriggerButton';
+import ModalForAddOrEdit from './ModalForAddOrEdit';
 
 interface Property {
   id: string;
@@ -119,7 +119,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
               closeOnDocumentClick={false}
             >
               <Button.Group>
-                <ModalTriggerButton
+                <ModalForAddOrEdit
                   id={property.id}
                   label={property.title}
                   content={property.content}
@@ -128,7 +128,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                     editNoteContent(newContent)
                   )}
                 />
-                <ModalTriggerButton
+                <ModalForAddOrEdit
                   id="newGoodFinding"
                   label="得られた知見"
                   button={<Button icon="thumbs up outline" />}
@@ -136,7 +136,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                     addFinding(newContent, true)
                   )}
                 />
-                <ModalTriggerButton
+                <ModalForAddOrEdit
                   id="newBadFinding"
                   label="得られた知見"
                   button={<Button icon="thumbs down outline" />}
@@ -172,7 +172,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   closeOnDocumentClick={false}
                 >
                   <Button.Group>
-                    <ModalTriggerButton
+                    <ModalForAddOrEdit
                       id={finding.id}
                       label="得られた知見"
                       content={finding.title}

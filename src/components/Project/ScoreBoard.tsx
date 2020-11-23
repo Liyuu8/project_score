@@ -3,7 +3,7 @@ import { Button, Form, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import Score from './Score';
-import ModalTriggerButton from './ModalTriggerButton';
+import ModalForAddOrEdit from './ModalForAddOrEdit';
 
 interface Props {
   stageNumber: number;
@@ -27,7 +27,7 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
       <Score stageNumber={stageNumber} />
       <StyledGrid doubling columns={2}>
         <Grid.Column width={6} verticalAlign="middle">
-          <ModalTriggerButton
+          <ModalForAddOrEdit
             id="newMeasure"
             label="施策"
             button={
@@ -37,7 +37,7 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
               isSubmitted && console.log('newMeasure is', content)
             }
           />
-          <ModalTriggerButton
+          <ModalForAddOrEdit
             id="newIntermediateObjective"
             label="中間目標"
             button={
@@ -47,7 +47,7 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
               isSubmitted && console.log('newIntermediateObjective is', content)
             }
           />
-          <ModalTriggerButton
+          <ModalForAddOrEdit
             id="newVictoryCondition"
             label="勝利条件"
             button={

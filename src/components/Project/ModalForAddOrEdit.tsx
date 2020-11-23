@@ -9,7 +9,7 @@ interface Props {
   onActionClick: (isSubmitted: boolean, content: string) => void;
 }
 
-const ModalTriggerButton: FC<Props> = ({
+const ModalForAddOrEdit: FC<Props> = ({
   id,
   label,
   content = '',
@@ -60,4 +60,4 @@ const ModalTriggerButton: FC<Props> = ({
   );
 };
 
-export default ModalTriggerButton;
+export default ModalForAddOrEdit;
