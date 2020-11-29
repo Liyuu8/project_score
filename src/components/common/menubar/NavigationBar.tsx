@@ -1,7 +1,8 @@
 import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Menu, Sidebar } from 'semantic-ui-react';
+import { Button, Grid, Menu, Sidebar } from 'semantic-ui-react';
+import { v4 as uuid } from 'uuid';
 
 import { ThemeContext } from 'contexts';
 import paths from 'paths';
@@ -15,15 +16,34 @@ const NavigationBar: FC = () => {
   `;
   const Title = styled.h2`
     color: ${theme.color.black};
-    padding: 1rem;
+  `;
+  const StyledGrid = styled(Grid)`
+    &&& {
+      margin: 0;
+      width: 100%;
+    }
   `;
 
   return (
     <NavBar>
       <Sidebar as={Menu} direction="top" width="thin" visible>
-        <Link to={paths.home}>
-          <Title>Project Score</Title>
-        </Link>
+        <StyledGrid>
+          <Grid.Column floated="left" width={8}>
+            <Link to={paths.home}>
+              <Title>Project Score</Title>
+            </Link>
+          </Grid.Column>
+          <Grid.Column
+            floated="right"
+            width={8}
+            verticalAlign="middle"
+            textAlign="right"
+          >
+            <Link to={`/project/${uuid()}`}>
+              <Button color="teal">New</Button>
+            </Link>
+          </Grid.Column>
+        </StyledGrid>
       </Sidebar>
     </NavBar>
   );
