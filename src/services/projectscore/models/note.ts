@@ -1,25 +1,23 @@
 import firebase from 'firebase';
-import { Finding } from './finding';
+
+import { noteElements } from '../constants';
 
 export type Note = {
-  id?: string;
-  title: string;
-  type: string;
+  id: string;
+  content: string;
+  type: keyof typeof noteElements;
   posX: number;
   posY: number;
-  findingIds: string[];
-  findings: Finding[];
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
 
 export const blankNote: Note = {
-  title: '',
-  type: '',
+  id: '',
+  content: '',
+  type: 'measure',
   posX: 0,
   posY: 0,
-  findingIds: [],
-  findings: [],
   createdAt: null,
   updatedAt: null,
 };

@@ -18,7 +18,7 @@ interface Props {
   };
 }
 
-const Note: FC<Props> = ({ data }) => {
+const NoteWrapper: FC<Props> = ({ data }) => {
   return (
     <>
       {data.hasTarget && (
@@ -57,4 +57,4 @@ const Note: FC<Props> = ({ data }) => {
   );
 };
 
-export default memo(Note);
+export default memo(NoteWrapper);

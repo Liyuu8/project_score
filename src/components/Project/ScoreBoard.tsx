@@ -2,14 +2,15 @@ import React, { FC } from 'react';
 import { Button, Form, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import Score from './Score';
+import { ScoreData } from 'hooks/use-project';
+import ScoreCore from './ScoreCore';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
 
 interface Props {
-  stageNumber: number;
+  scoreData: ScoreData;
 }
 
-const ScoreBoard: FC<Props> = ({ stageNumber }) => {
+const ScoreBoard: FC<Props> = ({ scoreData }) => {
   const StyledGrid = styled(Grid)`
     &&& {
       margin-top: 1px;
@@ -24,7 +25,10 @@ const ScoreBoard: FC<Props> = ({ stageNumber }) => {
 
   return (
     <>
-      <Score stageNumber={stageNumber} />
+      <ScoreCore
+        noteDataList={scoreData.noteDataList}
+        noteConnections={scoreData.noteConnections}
+      />
       <StyledGrid doubling columns={2}>
         <Grid.Column width={6} verticalAlign="middle">
           <ModalForAddOrEdit

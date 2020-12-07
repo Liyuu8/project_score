@@ -1,17 +1,17 @@
 import firebase from 'firebase';
 
-export type Finding = {
+export type NoteConnection = {
   id: string;
-  content: string;
-  isGood: boolean;
+  sourceNoteId: string;
+  targetNoteId: string;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
 
-export const blankFinding: Finding = {
+export const blankConnection: NoteConnection = {
   id: '',
-  content: '',
-  isGood: true,
+  sourceNoteId: '',
+  targetNoteId: '',
   createdAt: null,
   updatedAt: null,
 };

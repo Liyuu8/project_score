@@ -1,28 +1,26 @@
 import firebase from 'firebase';
-import { Note } from './note';
 
 export type Score = {
-  id?: string;
+  id: string;
   title: string;
-  stage: number;
-  member: string;
-  budget: string;
-  leadTime: string;
-  quality: string;
-  businessModel: string;
-  surroundings: string;
-  competitor: string;
-  enemy: string;
-  noteIds: string[];
-  notes: Note[];
-  memo: string;
+  stage: number; // ステージ項番
+  member: string; // 人材
+  budget: string; // 予算
+  leadTime: string; // 納期／リードタイム
+  quality: string; // クオリティ
+  businessModel: string; // ビジネスモデル
+  surroundings: string; // 環境
+  competitor: string; // 競合
+  enemy: string; // 外敵
+  memo: string; // メモ
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
 
 export const blankScore: Score = {
-  title: '',
-  stage: 0,
+  id: '',
+  title: 'Stage 1',
+  stage: 1,
   member: '',
   budget: '',
   leadTime: '',
@@ -31,8 +29,6 @@ export const blankScore: Score = {
   surroundings: '',
   competitor: '',
   enemy: '',
-  noteIds: [],
-  notes: [],
   memo: '',
   createdAt: null,
   updatedAt: null,

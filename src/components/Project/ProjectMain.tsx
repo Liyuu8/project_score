@@ -1,7 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
+import { ProjectScore } from 'hooks/use-project';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 
@@ -10,7 +11,7 @@ interface Panes {
   menuItem: string | { key: string; icon: string };
 }
 
-const ProjectMain: FC = () => {
+const ProjectMain: FC<{ projectScore: ProjectScore }> = ({ projectScore }) => {
   const StyledGrid = styled(Grid)`
     &&& {
       padding: 1rem;
@@ -22,24 +23,22 @@ const ProjectMain: FC = () => {
     }
   `;
 
-  const [panes, setPanes] = useState<Panes[]>([
-    {
-      menuItem: 'Stage 1',
+  const [updatedProjectScore, setUpdatedProjectScore] = useState(projectScore);
+  useEffect(() => {
+    setUpdatedProjectScore(projectScore);
+  }, [projectScore]);
+
+  const [panes, setPanes] = useState<Panes[]>(
+    updatedProjectScore.scoreDataList.map((scoreData) => ({
+      menuItem: scoreData.score.title,
       pane: {
-        key: '1',
+        key: scoreData.score.stage.toString(),
         attached: false,
-        content: <ScoreBoard stageNumber={1} />,
+        content: <ScoreBoard scoreData={scoreData} />,
       },
-    },
-    {
-      menuItem: 'Stage 2',
-      pane: {
-        key: '2',
-        attached: false,
-        content: <ScoreBoard stageNumber={2} />,
-      },
-    },
-  ]);
+    }))
+  );
+
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const addStage = () => {
@@ -49,11 +48,14 @@ const ProjectMain: FC = () => {
     const newPanes = [...panes];
     const newStageIndex = parseInt(panes[panes.length - 1].pane.key, 10) + 1;
     newPanes.push({
+      // TODO: 仮処理
       menuItem: `Stage ${newStageIndex}`,
       pane: {
         key: `${newStageIndex}`,
         attached: false,
-        content: <ScoreBoard stageNumber={newStageIndex} />,
+        content: (
+          <ScoreBoard scoreData={updatedProjectScore.scoreDataList[0]} />
+        ),
       },
     });
     setPanes(newPanes);

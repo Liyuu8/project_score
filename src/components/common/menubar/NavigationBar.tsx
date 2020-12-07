@@ -2,10 +2,10 @@ import React, { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Button, Grid, Menu, Sidebar } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 
 import { ThemeContext } from 'contexts';
 import paths from 'paths';
+import ModalForNewProject from 'components/Project/ModalForNewProject';
 
 const NavigationBar: FC = () => {
   const theme = useContext(ThemeContext);
@@ -39,9 +39,7 @@ const NavigationBar: FC = () => {
             verticalAlign="middle"
             textAlign="right"
           >
-            <Link to={`/project/${uuid()}`}>
-              <Button color="teal">New</Button>
-            </Link>
+            <ModalForNewProject button={<Button color="teal">New</Button>} />
           </Grid.Column>
         </StyledGrid>
       </Sidebar>

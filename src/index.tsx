@@ -1,27 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-// import firebase from 'firebase/app';
+import firebase from 'firebase/app';
 
-import projectScoreTheme from 'theme';
-import { ThemeContext } from 'contexts';
-// import FirebaseApp from 'FirebaseApp';/
-// import firebaseConfig from './firebase-config';
+import projectScoreTheme from './theme';
+import { ThemeContext } from './contexts';
+import FirebaseApp from './FirebaseApp';
+import firebaseConfig from './firebase-config';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import 'semantic-ui-css/semantic.min.css';
+import './index.css';
 
-// firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* <FirebaseApp> */}
-      <ThemeContext.Provider value={projectScoreTheme}>
-        <App />
-      </ThemeContext.Provider>
-      {/* </FirebaseApp> */}
+      <FirebaseApp>
+        <ThemeContext.Provider value={projectScoreTheme}>
+          <App />
+        </ThemeContext.Provider>
+      </FirebaseApp>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

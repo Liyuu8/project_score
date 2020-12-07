@@ -1,20 +1,30 @@
 import React, { FC } from 'react';
-// import { useHistory, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { Dimmer, Loader } from 'semantic-ui-react';
 
-// import useProject from 'hooks/use-project';
+import useProject from 'hooks/use-project';
 import ProjectMain from 'components/Project/ProjectMain';
-// import paths from 'paths';
+import paths from 'paths';
 
 const ProjectContainer: FC = () => {
-  // const history = useHistory();
-  // const { projectId } = useParams<{ projectId: string }>();
-  // if (!projectId) history.replace(paths.home);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  // const { project } = useProject(projectId);
+  const history = useHistory();
+  const { projectId } = useParams<{ projectId: string }>();
+  if (!projectId) history.replace(paths.home);
+  const { projectScore, loading, error } = useProject(projectId);
 
-  // return project ? <ProjectMain project={project} /> : <div />;
+  if (loading) {
+    return (
+      <Dimmer active inverted>
+        <Loader inverted content="Loading" />
+      </Dimmer>
+    );
+  }
+  if (projectScore && !error) {
+    return <ProjectMain projectScore={projectScore} />;
+  }
 
-  return <ProjectMain />;
+  // TODO: エラー画面の実装
+  return <div />;
 };
 
 export default ProjectContainer;
