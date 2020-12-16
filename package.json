@@ -35,7 +35,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'; stylelint 'src/**/*.{css,jsx,tsx}'; cd functions/ && eslint 'src/**/*.{js,ts}'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "deploy": "firebase deploy --only hosting"
   },
   "eslintConfig": {
     "extends": [
