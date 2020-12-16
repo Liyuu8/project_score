@@ -26,7 +26,7 @@ const useProjects = (options?: ProjectsOptions) => {
     if (!db) throw new Error('Firestore is not initialized');
     const query = db
       .collection(collectionName.projects)
-      .orderBy('updatedAt', 'asc')
+      .orderBy('updatedAt', 'desc')
       .limit(optionsRef.current.limit);
 
     const load = async () => {
