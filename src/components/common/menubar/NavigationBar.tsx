@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Button, Grid, Menu, Sidebar } from 'semantic-ui-react';
 
-import { ThemeContext } from 'contexts';
-import paths from 'paths';
+import { ThemeContext } from 'contexts/contexts';
+import paths from 'utils/paths';
 import ModalForNewProject from 'components/Project/ModalForNewProject';
 
 const NavigationBar: FC = () => {

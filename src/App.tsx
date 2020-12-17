@@ -5,7 +5,7 @@ import NavigationBar from 'components/common/menubar/NavigationBar';
 import Home from 'components/Home';
 import Project from 'components/Project';
 import Spacer from 'components/common/atoms/Spacer';
-import paths from './paths';
+import paths from './utils/paths';
 
 const App: FC = () => {
   return (

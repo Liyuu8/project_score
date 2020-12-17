@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
-import projectScoreTheme from './theme';
-import { ThemeContext } from './contexts';
+import projectScoreTheme from './contexts/theme';
+import { ThemeContext } from './contexts/contexts';
 import FirebaseApp from './FirebaseApp';
 import App from './App';
 import reportWebVitals from './reportWebVitals';

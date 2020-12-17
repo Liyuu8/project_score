@@ -4,7 +4,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 
 import { useProjectScore } from 'hooks/project';
 import ProjectMain from 'components/Project/ProjectMain';
-import paths from 'paths';
+import paths from 'utils/paths';
 
 const ProjectContainer: FC = () => {
   const history = useHistory();
