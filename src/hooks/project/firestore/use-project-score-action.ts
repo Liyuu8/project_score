@@ -1,39 +1,22 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
 
-import { FirebaseContext } from 'contexts';
 import { collectionName } from 'services/projectscore/constants';
 import { blankProject } from 'services/projectscore/models/project';
 import { blankScore } from 'services/projectscore/models/score';
 import { blankNote } from 'services/projectscore/models/note';
 import { blankConnection } from 'services/projectscore/models/connection';
+import { db } from 'utils/firebase';
+import { ProjectHooks } from '..';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useCreatingProject = (
-  title: string,
-  description: string,
-  isSubmitted: boolean,
-  setSubmitted: (value: boolean) => void
-) => {
-  const [newProjectId, setNewProjectId] = useState('');
-  const [pending, setPending] = useState(false);
-  const firebaseRef = useRef(useContext(FirebaseContext));
+const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
+  const addProjectScore = useCallback(
+    async (projectId: string, title: string, description: string) => {
+      if (!title) {
+        return;
+      }
 
-  useEffect(() => {
-    if (!isSubmitted || !title) {
-      setSubmitted(false);
-
-      return;
-    }
-
-    const { db } = firebaseRef.current;
-    if (!db) throw new Error('Firestore is not initialized');
-
-    const load = async () => {
-      setPending(true);
-
-      const projectId = uuid();
       try {
         const projectDoc = db
           .collection(collectionName.projects)
@@ -121,17 +104,18 @@ const useCreatingProject = (
               .set(newConnection);
           })
         );
-      } finally {
-        setPending(false);
-        setNewProjectId(projectId);
+      } catch (e) {
+        console.log(e);
       }
-    };
+    },
+    []
+  );
 
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitted]);
+  const deleteProjectScore = useCallback(async (id: string) => {
+    await db.collection(collectionName.projects).doc(id).delete();
+  }, []);
 
-  return { newProjectId, pending };
+  return { addProjectScore, deleteProjectScore };
 };
 
-export default useCreatingProject;
+export default useProjectScoreAction;

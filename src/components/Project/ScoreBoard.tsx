@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Button, Form, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { ScoreData } from 'hooks/use-project';
+import { ScoreData } from 'services/projectscore/models/projectscore';
 import ScoreCore from './ScoreCore';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
 

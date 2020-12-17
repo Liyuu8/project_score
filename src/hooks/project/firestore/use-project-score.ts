@@ -1,41 +1,25 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Project } from 'services/projectscore/models/project';
 import { collectionName } from 'services/projectscore/constants';
-import { FirebaseContext } from 'contexts';
 import { Score } from 'services/projectscore/models/score';
 import { Finding } from 'services/projectscore/models/finding';
 import { Note } from 'services/projectscore/models/note';
 import { NoteConnection } from 'services/projectscore/models/connection';
+import {
+  NoteData,
+  ProjectScore,
+  ScoreData,
+} from 'services/projectscore/models/projectscore';
+import { db } from 'utils/firebase';
+import { ProjectHooks } from '..';
 
-export interface ProjectScore {
-  project: Project;
-  scoreDataList: ScoreData[];
-}
-
-export interface ScoreData {
-  score: Score;
-  noteDataList: NoteData[];
-  noteConnections: NoteConnection[];
-}
-
-export interface NoteData {
-  note: Note;
-  findings: Finding[];
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useProject = (projectId: string) => {
+const useProjectScore: ProjectHooks['useProjectScore'] = (projectId) => {
   const [projectScore, setProjectScore] = useState<ProjectScore>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const firebaseRef = useRef(useContext(FirebaseContext));
-
   useEffect(() => {
-    const { db } = firebaseRef.current;
-    if (!db) throw new Error('Firestore is not initialized');
-
     const load = async () => {
       setLoading(true);
       try {
@@ -105,4 +89,4 @@ const useProject = (projectId: string) => {
   return { projectScore, loading, error };
 };
 
-export default useProject;
+export default useProjectScore;

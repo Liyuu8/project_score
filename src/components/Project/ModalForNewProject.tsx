@@ -1,5 +1,4 @@
-import useCreatingProject from 'hooks/use-creating-project';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   Button,
@@ -12,6 +11,9 @@ import {
   Modal,
   TextArea,
 } from 'semantic-ui-react';
+import { v4 as uuid } from 'uuid';
+
+import { useProjectScoreAction } from 'hooks/project';
 
 interface Props {
   button: React.ReactNode;
@@ -20,25 +22,29 @@ interface Props {
 const ModalForNewProject: FC<Props> = ({ button }) => {
   const history = useHistory();
   const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const { newProjectId, pending } = useCreatingProject(
-    title,
-    description,
-    submitted,
-    setSubmitted
-  );
+  const { addProjectScore } = useProjectScoreAction();
 
-  useEffect(() => {
-    if (submitted && newProjectId) {
-      history.push(`/project/${newProjectId}`);
-      setOpen(false);
-      setTitle('');
-      setDescription('');
-    }
+  const handleSubmit = useCallback(async () => {
+    setPending(true);
+    const projectId = uuid();
+    await addProjectScore(projectId, title, description);
+    setPending(false);
+    history.push(`/project/${projectId}`);
+
+    setOpen(false);
+    setTitle('');
+    setDescription('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submitted, newProjectId]);
+  }, [title, description, addProjectScore]);
+
+  const handleCancel = useCallback(async () => {
+    setOpen(false);
+    setTitle('');
+    setDescription('');
+  }, []);
 
   return (
     <Modal
@@ -73,10 +79,10 @@ const ModalForNewProject: FC<Props> = ({ button }) => {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="red" onClick={() => setOpen(false)}>
+        <Button color="red" onClick={handleCancel}>
           <Icon name="remove" /> キャンセル
         </Button>
-        <Button color="green" onClick={() => setSubmitted(true)}>
+        <Button color="green" onClick={handleSubmit}>
           <Icon name="checkmark" /> 決定
         </Button>
       </Modal.Actions>

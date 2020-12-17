@@ -9,7 +9,7 @@ import paths from './paths';
 
 const App: FC = () => {
   return (
-    <div className="App">
+    <div>
       <NavigationBar />
       <Spacer />
       <Switch>

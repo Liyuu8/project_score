@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { ProjectScore } from 'hooks/use-project';
+import { ProjectScore } from 'services/projectscore/models/projectscore';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 

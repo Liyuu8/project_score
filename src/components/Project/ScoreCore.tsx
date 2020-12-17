@@ -9,9 +9,9 @@ import ReactFlow, {
   ReactFlowProvider,
 } from 'react-flow-renderer';
 
-import { NoteData } from 'hooks/use-project';
 import { noteElements } from 'services/projectscore/constants';
 import { NoteConnection } from 'services/projectscore/models/connection';
+import { NoteData } from 'services/projectscore/models/projectscore';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {

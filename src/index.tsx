@@ -1,19 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import firebase from 'firebase/app';
 
 import projectScoreTheme from './theme';
 import { ThemeContext } from './contexts';
 import FirebaseApp from './FirebaseApp';
-import firebaseConfig from './firebase-config';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
-
-firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
