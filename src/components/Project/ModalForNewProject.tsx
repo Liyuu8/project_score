@@ -6,10 +6,8 @@ import {
   Form,
   Header,
   Icon,
-  Input,
   Loader,
   Modal,
-  TextArea,
 } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 
@@ -23,28 +21,34 @@ const ModalForNewProject: FC<Props> = ({ button }) => {
   const history = useHistory();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const { addProjectScore } = useProjectScoreAction();
 
+  const closeModal = () => {
+    setOpen(false);
+    setTitle('');
+    setDescription('');
+  };
+
   const handleSubmit = useCallback(async () => {
+    if (!title) {
+      setError(true);
+
+      return;
+    }
+
     setPending(true);
     const projectId = uuid();
     await addProjectScore(projectId, title, description);
     setPending(false);
     history.push(`/project/${projectId}`);
-
-    setOpen(false);
-    setTitle('');
-    setDescription('');
+    closeModal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, description, addProjectScore]);
 
-  const handleCancel = useCallback(async () => {
-    setOpen(false);
-    setTitle('');
-    setDescription('');
-  }, []);
+  const handleCancel = useCallback(async () => closeModal(), []);
 
   return (
     <Modal
@@ -61,14 +65,20 @@ const ModalForNewProject: FC<Props> = ({ button }) => {
       <Header icon="edit" content="新しいプロジェクトを追加する" />
       <Modal.Content>
         <Form>
-          <Input
+          <Form.Input
             fluid
             label="Title"
             placeholder="記入欄"
             value={title}
-            onChange={(e, { value }) => setTitle(value ? value.toString() : '')}
+            error={error}
+            onChange={(e, { value }) => {
+              setTitle(value ? value.toString() : '');
+              if (value) {
+                setError(false);
+              }
+            }}
           />
-          <TextArea
+          <Form.TextArea
             label="Description"
             placeholder="記入欄"
             value={description}

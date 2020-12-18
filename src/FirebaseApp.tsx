@@ -1,6 +1,4 @@
 import React, { FC } from 'react';
-import 'firebase/auth';
-import 'firebase/firestore';
 
 import { ProjectHooksContext } from 'hooks/project';
 import useProjects from 'hooks/project/firestore/use-projects';
