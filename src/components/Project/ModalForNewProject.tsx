@@ -30,6 +30,7 @@ const ModalForNewProject: FC<Props> = ({ button }) => {
     setOpen(false);
     setTitle('');
     setDescription('');
+    setError(false);
   };
 
   const handleSubmit = useCallback(async () => {
@@ -57,7 +58,7 @@ const ModalForNewProject: FC<Props> = ({ button }) => {
       size="tiny"
       open={open}
       onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      onClose={closeModal}
     >
       <Dimmer active={pending} inverted>
         <Loader inverted content="Loading" />

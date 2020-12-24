@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import { useConnections, useNotes } from 'hooks/project';
+import React, { FC, useEffect, useState } from 'react';
 import ReactFlow, {
   removeElements,
   addEdge,
@@ -10,43 +11,44 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import { noteElements } from 'services/projectscore/constants';
-import { NoteConnection } from 'services/projectscore/models/connection';
-import { NoteData } from 'services/projectscore/models/projectscore';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {
-  noteDataList: NoteData[];
-  noteConnections: NoteConnection[];
+  projectId: string;
+  scoreId: string;
 }
 
 const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 
-const ScoreCore: FC<Props> = ({ noteDataList, noteConnections }) => {
-  const initElements = [
-    ...noteDataList.map((noteData) => ({
-      id: noteData.note.id,
-      type: 'noteNode',
-      data: {
-        id: noteData.note.id,
-        title: noteElements[noteData.note.type].name,
-        content: noteData.note.content
-          ? noteData.note.content
-          : `${noteElements[noteData.note.type].name}を記入してください`,
-        hasTarget: noteElements[noteData.note.type].hasTarget,
-        hasSource: noteElements[noteData.note.type].hasSourse,
-      },
-      position: { x: noteData.note.posX, y: noteData.note.posY },
-    })),
-    ...noteConnections.map((connection) => ({
-      id: connection.id,
-      source: connection.sourceNoteId,
-      target: connection.targetNoteId,
-      animated: true,
-      style: strokeStyle,
-    })),
-  ];
+const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
+  const { notes } = useNotes(projectId, scoreId);
+  const { connections } = useConnections(projectId, scoreId);
+  const [elements, setElements] = useState<Elements>([]);
 
-  const [elements, setElements] = useState<Elements>(initElements);
+  useEffect(() => {
+    setElements([
+      ...notes.map((note) => ({
+        id: note.id,
+        type: 'noteNode',
+        data: {
+          projectId,
+          scoreId,
+          note,
+          noteTitle: noteElements[note.type].name,
+          hasTarget: noteElements[note.type].hasTarget,
+          hasSource: noteElements[note.type].hasSourse,
+        },
+        position: { x: note.posX, y: note.posY },
+      })),
+      ...connections.map((connection) => ({
+        id: connection.id,
+        source: connection.sourceNoteId,
+        target: connection.targetNoteId,
+        animated: true,
+        style: strokeStyle,
+      })),
+    ]);
+  }, [connections, notes, projectId, scoreId]);
 
   return (
     <ReactFlowProvider>

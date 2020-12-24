@@ -2,27 +2,27 @@ import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
+import { Note } from 'services/projectscore/models/note';
+import { noteElements } from 'services/projectscore/constants';
+import { useFindingAction, useFindings, useNoteAction } from 'hooks/project';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
 import ModalForDelete from './ModalForDelete';
 
 interface Property {
-  id: string;
-  title: string;
-  content: string;
-  findings?: {
-    id: string;
-    title: string;
-    isGood: boolean;
-  }[];
+  projectId: string;
+  scoreId: string;
+  note: Note;
+  noteTitle: string;
 }
 
-const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
-  const [property, setProperty] = useState<Property>({
-    id,
-    title,
-    content,
-    findings,
-  });
+const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
+  const noteContent = note.content
+    ? note.content
+    : `${noteElements[note.type].name}を記入してください`;
+  const { findings } = useFindings(projectId, scoreId, note.id);
+  const { updateNote, deleteNote } = useNoteAction();
+  const { addFinding, updateFinding, deleteFinding } = useFindingAction();
+
   const [openedPopupKey, setOpenedPopupKey] = useState('');
   const onPopupClose = () => setOpenedPopupKey('');
 
@@ -36,37 +36,6 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
 
     return () => document.removeEventListener('click', popupCloseEvent);
   }, []);
-
-  const editNoteContent = (newContent: string) => {
-    setProperty({ ...property, content: newContent });
-  };
-  const removeNoteContent = () => {
-    // TODO: Firebaseから削除
-    console.log(`「${property.content}」が削除されました`);
-    setProperty({ ...property, content: '', findings: [] });
-  };
-
-  const addFinding = (findingTitle: string, isGood: boolean) => {
-    const newFindings = [
-      ...property.findings,
-      {
-        id: `findings${property.findings ? property.findings.length + 1 : 0}`,
-        title: findingTitle,
-        isGood,
-      },
-    ];
-    setProperty({ ...property, findings: newFindings });
-  };
-  const editFinding = (findingTitle: string, index: number) => {
-    const newFindings = [...property.findings];
-    newFindings[index].title = findingTitle;
-    setProperty({ ...property, findings: newFindings });
-  };
-  const removeFinding = (index: number) => {
-    const newFindings = [...property.findings];
-    newFindings.splice(index, 1);
-    setProperty({ ...property, findings: newFindings });
-  };
 
   const handleModalActionForAddOrEdit = (
     popupButtonPushedAction: (newContent: string) => void
@@ -110,7 +79,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
         <Table.Row>
           <StyledTableHeaderCell>
             <Grid>
-              <Grid.Column>{property.title}</Grid.Column>
+              <Grid.Column>{noteTitle}</Grid.Column>
             </Grid>
           </StyledTableHeaderCell>
         </Table.Row>
@@ -119,27 +88,30 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
         <Table.Row>
           <Table.Cell>
             <Popup
-              key={property.id}
+              key={note.id}
               trigger={
-                <Pointer className="popupTrigger">{property.content}</Pointer>
+                <Pointer className="popupTrigger">{noteContent}</Pointer>
               }
               on="click"
               position="top center"
               style={popupStyle}
-              open={openedPopupKey === property.id}
-              onOpen={() => setOpenedPopupKey(property.id)}
+              open={openedPopupKey === note.id}
+              onOpen={() => setOpenedPopupKey(note.id)}
               onClose={onPopupClose}
               // モーダルクリック時に閉じてしまうので、クリックイベントハンドラを別途実装する（popupCloseEvent）
               closeOnDocumentClick={false}
             >
               <Button.Group>
                 <ModalForAddOrEdit
-                  id={property.id}
-                  label={property.title}
-                  content={property.content}
+                  id={note.id}
+                  label={noteTitle}
+                  content={noteContent}
                   button={<Button icon="edit" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
-                    editNoteContent(newContent)
+                    updateNote(projectId, scoreId, {
+                      ...note,
+                      content: newContent,
+                    })
                   )}
                 />
                 <ModalForAddOrEdit
@@ -147,7 +119,7 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   label="得られた知見"
                   button={<Button icon="thumbs up outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
-                    addFinding(newContent, true)
+                    addFinding(projectId, scoreId, note.id, newContent, true)
                   )}
                 />
                 <ModalForAddOrEdit
@@ -155,32 +127,32 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                   label="得られた知見"
                   button={<Button icon="thumbs down outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
-                    addFinding(newContent, false)
+                    addFinding(projectId, scoreId, note.id, newContent, false)
                   )}
                 />
                 <ModalForDelete
-                  id={property.id}
-                  label={property.title}
-                  content={property.content}
+                  id={note.id}
+                  label={noteTitle}
+                  content={noteContent}
                   button={<Button icon="trash" />}
                   onActionClick={handleModalActionForDelete(() =>
-                    removeNoteContent()
+                    deleteNote(projectId, scoreId, note.id)
                   )}
                 />
               </Button.Group>
             </Popup>
           </Table.Cell>
         </Table.Row>
-        {property.findings && property.findings.length > 0 && (
+        {findings && findings.length > 0 && (
           <Table.Row>
             <Table.Cell>
-              {property.findings.map((finding, index) => (
+              {findings.map((finding) => (
                 <Popup
                   key={finding.id}
                   trigger={
                     <Segment color={finding.isGood ? 'blue' : 'red'} raised>
                       <Pointer className="popupTrigger">
-                        {finding.title}
+                        {finding.content}
                       </Pointer>
                     </Segment>
                   }
@@ -197,19 +169,23 @@ const NoteCore: FC<Property> = ({ id, title, content, findings = [] }) => {
                     <ModalForAddOrEdit
                       id={finding.id}
                       label="得られた知見"
-                      content={finding.title}
+                      content={finding.content}
                       button={<Button icon="edit" />}
                       onActionClick={handleModalActionForAddOrEdit(
-                        (newContent) => editFinding(newContent, index)
+                        (newContent) =>
+                          updateFinding(projectId, scoreId, note.id, {
+                            ...finding,
+                            content: newContent,
+                          })
                       )}
                     />
                     <ModalForDelete
                       id={finding.id}
                       label="得られた知見"
-                      content={finding.title}
+                      content={finding.content}
                       button={<Button icon="trash" />}
                       onActionClick={handleModalActionForDelete(() =>
-                        removeFinding(index)
+                        deleteFinding(projectId, scoreId, note.id, finding.id)
                       )}
                     />
                   </Button.Group>

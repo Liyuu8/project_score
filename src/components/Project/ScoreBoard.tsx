@@ -2,15 +2,16 @@ import React, { FC } from 'react';
 import { Button, Form, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { ScoreData } from 'services/projectscore/models/projectscore';
+import { useNoteAction } from 'hooks/project';
 import ScoreCore from './ScoreCore';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
 
 interface Props {
-  scoreData: ScoreData;
+  projectId: string;
+  scoreId: string;
 }
 
-const ScoreBoard: FC<Props> = ({ scoreData }) => {
+const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
   const StyledGrid = styled(Grid)`
     &&& {
       margin-top: 1px;
@@ -23,12 +24,11 @@ const ScoreBoard: FC<Props> = ({ scoreData }) => {
     }
   `;
 
+  const { addNote } = useNoteAction();
+
   return (
     <>
-      <ScoreCore
-        noteDataList={scoreData.noteDataList}
-        noteConnections={scoreData.noteConnections}
-      />
+      <ScoreCore projectId={projectId} scoreId={scoreId} />
       <StyledGrid doubling columns={2}>
         <Grid.Column width={6} verticalAlign="middle">
           <ModalForAddOrEdit
@@ -38,7 +38,7 @@ const ScoreBoard: FC<Props> = ({ scoreData }) => {
               <StyledButton icon="add" label="施策" labelPosition="left" />
             }
             onActionClick={(isSubmitted, content) =>
-              isSubmitted && console.log('newMeasure is', content)
+              isSubmitted && addNote(projectId, scoreId, content, 'measure')
             }
           />
           <ModalForAddOrEdit
@@ -48,7 +48,8 @@ const ScoreBoard: FC<Props> = ({ scoreData }) => {
               <StyledButton icon="add" label="中間目標" labelPosition="left" />
             }
             onActionClick={(isSubmitted, content) =>
-              isSubmitted && console.log('newIntermediateObjective is', content)
+              isSubmitted &&
+              addNote(projectId, scoreId, content, 'intermediateObjective')
             }
           />
           <ModalForAddOrEdit
@@ -58,7 +59,8 @@ const ScoreBoard: FC<Props> = ({ scoreData }) => {
               <StyledButton icon="add" label="勝利条件" labelPosition="left" />
             }
             onActionClick={(isSubmitted, content) =>
-              isSubmitted && console.log('newVictoryCondition is', content)
+              isSubmitted &&
+              addNote(projectId, scoreId, content, 'victoryCondition')
             }
           />
         </Grid.Column>

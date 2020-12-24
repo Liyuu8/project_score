@@ -17,7 +17,11 @@ const useProjects: ProjectHooks['useProjects'] = (options) => {
     db
       .collection(collectionName.projects)
       .orderBy('updatedAt', 'desc')
-      .limit(optionsRef.current.limit)
+      .limit(optionsRef.current.limit),
+    {
+      idField: 'id',
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
   );
 
   return { projects: projects ?? [], loading, error };

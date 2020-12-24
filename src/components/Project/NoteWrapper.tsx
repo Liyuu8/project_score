@@ -1,18 +1,15 @@
 import React, { memo, FC } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
+import { Note } from 'services/projectscore/models/note';
 
 import NoteCore from './NoteCore';
 
 interface Props {
   data: {
-    id: string;
-    title: string;
-    content: string;
-    findings?: {
-      id: string;
-      title: string;
-      isGood: boolean;
-    }[];
+    projectId: string;
+    scoreId: string;
+    note: Note;
+    noteTitle: string;
     hasTarget: boolean;
     hasSource: boolean;
   };
@@ -35,10 +32,10 @@ const NoteWrapper: FC<Props> = ({ data }) => {
         />
       )}
       <NoteCore
-        id={data.id}
-        title={data.title}
-        content={data.content}
-        findings={data.findings}
+        projectId={data.projectId}
+        scoreId={data.scoreId}
+        note={data.note}
+        noteTitle={data.noteTitle}
       />
       {data.hasSource && (
         <Handle
