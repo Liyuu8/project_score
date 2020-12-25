@@ -18,8 +18,10 @@ const PlotTextArea: FC<{
       key={plot.id}
       label={plotElements[plot.type].name}
       placeholder="記入欄"
-      rows={1}
+      rows={plot.type === 'memo' ? 2 : 1}
       value={plot ? plot.content : ''}
+      // ISSUE:
+      // 高速で入力する値を変化させると、DBへの書き込み⇨読み込みの処理が追いつかない
       onChange={(e, { value }) =>
         plot &&
         updatePlot(projectId, scoreId, {

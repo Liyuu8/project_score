@@ -13,14 +13,16 @@ const Plots: FC<{ projectId: string; scoreId: string }> = ({
   return (
     <Form>
       <Header as="h3">廟算八要素</Header>
-      {plots.map((plot) => (
-        <PlotTextArea
-          key={plot.id}
-          projectId={projectId}
-          scoreId={scoreId}
-          plot={plot}
-        />
-      ))}
+      {plots
+        .filter((plot) => plot.type !== 'memo')
+        .map((plot) => (
+          <PlotTextArea
+            key={plot.id}
+            projectId={projectId}
+            scoreId={scoreId}
+            plot={plot}
+          />
+        ))}
     </Form>
   );
 };

@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
-import { Button, Form, Grid } from 'semantic-ui-react';
+import { Button, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { useNoteAction } from 'hooks/project';
 import ScoreCore from './ScoreCore';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
+import ScoreMemo from './ScoreMemo';
 
 interface Props {
   projectId: string;
@@ -65,9 +66,7 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
           />
         </Grid.Column>
         <Grid.Column width={10}>
-          <Form>
-            <Form.TextArea label="メモ" placeholder="記入欄" rows={2} />
-          </Form>
+          <ScoreMemo projectId={projectId} scoreId={scoreId} />
         </Grid.Column>
       </StyledGrid>
     </>
