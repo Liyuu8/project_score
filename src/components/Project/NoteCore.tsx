@@ -2,8 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { Note } from 'services/projectscore/models/note';
-import { noteElements } from 'services/projectscore/constants';
+import { Note, noteElements } from 'services/projectscore/models/note';
 import { useFindingAction, useFindings, useNoteAction } from 'hooks/project';
 import ModalForAddOrEdit from './ModalForAddOrEdit';
 import ModalForDelete from './ModalForDelete';

@@ -1,10 +1,9 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Button, Grid, Popup, Tab } from 'semantic-ui-react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Dimmer, Grid, Loader, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { Project } from 'services/projectscore/models/project';
 import { useScoreDataAction, useScores } from 'hooks/project';
-import ListLoader from 'components/common/atoms/ListLoader';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 
@@ -30,19 +29,30 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
   const [panes, setPanes] = useState<Panes[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  useEffect(() => {
-    setPanes(
-      scores.map((score) => ({
-        menuItem: score.title,
-        pane: {
-          key: score.stage.toString(),
-          attached: false,
-          content: <ScoreBoard projectId={project.id} scoreId={score.id} />,
-        },
-      }))
-    );
-    setActiveIndex(scores.length - 1);
+  const paneInfoMemo = useMemo(() => {
+    // https://qiita.com/kobayang/items/88a104c0be28e16e65e8
+    return () => {
+      if (scores.length === 0) {
+        return;
+      }
+      setPanes(
+        scores.map((score) => ({
+          menuItem: score.title,
+          pane: {
+            key: score.stage.toString(),
+            attached: false,
+            content: <ScoreBoard projectId={project.id} scoreId={score.id} />,
+          },
+        }))
+      );
+      setActiveIndex(scores.length - 1);
+      console.log('scoresLength', scores.length);
+    };
   }, [project, scores]);
+
+  useEffect(() => {
+    paneInfoMemo();
+  }, [paneInfoMemo]);
 
   const addStage = useCallback(async () => {
     if (scores.length > 5) {
@@ -60,48 +70,48 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
     await deleteScoreData(project.id, scores[activeIndex].id);
   }, [deleteScoreData, project, scores, activeIndex]);
 
-  return (
+  return loading ? (
+    <Dimmer active inverted>
+      <Loader inverted content="Loading" />
+    </Dimmer>
+  ) : (
     <StyledGrid doubling columns={2}>
       <Grid.Column width={13}>
-        {loading ? (
-          <ListLoader />
-        ) : (
-          <>
-            <StyledButtonGroup floated="right" size="large">
-              <Popup
-                content="Add new stage"
-                trigger={<Button icon="add" onClick={addStage} />}
-              />
-              <Popup
-                content="Delete stage"
-                trigger={<Button icon="delete" onClick={removeStage} />}
-              />
-            </StyledButtonGroup>
-            <Tab
-              menu={{ pointing: true }}
-              panes={panes}
-              renderActiveOnly={false}
-              activeIndex={activeIndex}
-              onTabChange={(event, data) => {
-                let index;
-                switch (typeof data.activeIndex) {
-                  case 'string':
-                    index = parseInt(data.activeIndex, 10);
-                    break;
-                  case 'number':
-                    index = data.activeIndex;
-                    break;
-                  default:
-                    index = 0;
-                }
-                setActiveIndex(index);
-              }}
-            />
-          </>
-        )}
+        <StyledButtonGroup floated="right" size="large">
+          <Popup
+            content="Add new stage"
+            trigger={<Button icon="add" onClick={addStage} />}
+          />
+          <Popup
+            content="Delete stage"
+            trigger={<Button icon="delete" onClick={removeStage} />}
+          />
+        </StyledButtonGroup>
+        <Tab
+          menu={{ pointing: true }}
+          panes={panes}
+          renderActiveOnly={false}
+          activeIndex={activeIndex}
+          onTabChange={(event, data) => {
+            let index;
+            switch (typeof data.activeIndex) {
+              case 'string':
+                index = parseInt(data.activeIndex, 10);
+                break;
+              case 'number':
+                index = data.activeIndex;
+                break;
+              default:
+                index = 0;
+            }
+            setActiveIndex(index);
+          }}
+        />
       </Grid.Column>
       <Grid.Column width={3}>
-        <Plots />
+        {scores[activeIndex] && (
+          <Plots projectId={project.id} scoreId={scores[activeIndex].id} />
+        )}
       </Grid.Column>
     </StyledGrid>
   );

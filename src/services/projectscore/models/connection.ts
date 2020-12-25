@@ -15,3 +15,8 @@ export const blankConnection: NoteConnection = {
   createdAt: null,
   updatedAt: null,
 };
+
+export const initialConnectionElementList = [
+  { source: 0, target: 2 },
+  { source: 2, target: 3 },
+];

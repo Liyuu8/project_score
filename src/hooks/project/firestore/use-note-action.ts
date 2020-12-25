@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import firebase from 'firebase';
 import { v4 as uuid } from 'uuid';
 
-import { collectionName, noteElements } from 'services/projectscore/constants';
-import { Note } from 'services/projectscore/models/note';
+import { collectionName } from 'services/projectscore/constants';
+import { Note, noteElements } from 'services/projectscore/models/note';
 import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 

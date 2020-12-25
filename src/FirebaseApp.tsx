@@ -8,6 +8,8 @@ import useProjectScoreAction from 'hooks/project/firestore/use-project-score-act
 import useScores from 'hooks/project/firestore/use-scores';
 import useScoreAction from 'hooks/project/firestore/use-score-action';
 import useScoreDataAction from 'hooks/project/firestore/use-score-data-action';
+import usePlots from 'hooks/project/firestore/use-plots';
+import usePlotAction from 'hooks/project/firestore/use-plot-action';
 import useNotes from 'hooks/project/firestore/use-notes';
 import useNoteAction from 'hooks/project/firestore/use-note-action';
 import useConnections from 'hooks/project/firestore/use-connections';
@@ -25,6 +27,8 @@ const FirebaseApp: FC = ({ children }) => {
         useScores,
         useScoreAction,
         useScoreDataAction,
+        usePlots,
+        usePlotAction,
         useNotes,
         useNoteAction,
         useConnections,

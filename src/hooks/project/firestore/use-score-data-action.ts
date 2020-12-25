@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { collectionName } from 'services/projectscore/constants';
 import { Score } from 'services/projectscore/models/score';
+import { Plot } from 'services/projectscore/models/plot';
 import { Note } from 'services/projectscore/models/note';
 import { NoteConnection } from 'services/projectscore/models/connection';
 import { db } from 'utils/firebase';
@@ -38,6 +39,32 @@ const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
         .collection(collectionName.scores)
         .doc(lastScore.id);
 
+      // Copy last plots
+
+      const lastScorePlotSnap = await lastScoreDoc
+        .collection(collectionName.plots)
+        .get();
+      const lastScorePlotList = lastScorePlotSnap.docs.map(
+        (doc) => doc.data() as Plot
+      );
+
+      const newPlots = lastScorePlotList.map((plot) => ({
+        ...plot,
+        id: uuid(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }));
+      await Promise.all(
+        newPlots.map(async (newPlot) => {
+          await newScoreDoc
+            .collection(collectionName.plots)
+            .doc(newPlot.id)
+            .set(newPlot);
+        })
+      );
+
+      // Copy last notes
+
       const lastScoreNoteSnap = await lastScoreDoc
         .collection(collectionName.notes)
         .get();
@@ -59,6 +86,8 @@ const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
             .set(newNote);
         })
       );
+
+      // Copy last connections
 
       const lastScoreNoteConnectionSnap = await lastScoreDoc
         .collection(collectionName.connections)

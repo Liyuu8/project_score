@@ -3,10 +3,10 @@ import { createContext } from 'react';
 import { useClient } from 'hooks/di';
 import { Project } from 'services/projectscore/models/project';
 import { Score } from 'services/projectscore/models/score';
-import { Note } from 'services/projectscore/models/note';
+import { Plot } from 'services/projectscore/models/plot';
+import { Note, noteElements } from 'services/projectscore/models/note';
 import { NoteConnection } from 'services/projectscore/models/connection';
 import { Finding } from 'services/projectscore/models/finding';
-import { noteElements } from 'services/projectscore/constants';
 
 export type ProjectsOptions = {
   limit?: number;
@@ -20,7 +20,6 @@ export type ProjectHooks = {
     loading: boolean;
     error: Error | undefined;
   };
-
   useProject: (
     projectId: string
   ) => {
@@ -58,6 +57,22 @@ export type ProjectHooks = {
   useScoreDataAction: () => {
     addScoreData: (projectId: string) => Promise<void>;
     deleteScoreData: (projectId: string, scoreId: string) => Promise<void>;
+  };
+
+  usePlots: (
+    projectId: string,
+    scoreId: string
+  ) => {
+    plots: Plot[];
+    loading: boolean;
+    error: Error | undefined;
+  };
+  usePlotAction: () => {
+    updatePlot: (
+      projectId: string,
+      scoreId: string,
+      updatedPlot: Plot
+    ) => Promise<void>;
   };
 
   useNotes: (
@@ -174,6 +189,18 @@ export const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
   const client = useClient(ProjectHooksContext);
 
   return client.useScoreDataAction();
+};
+
+export const usePlots: ProjectHooks['usePlots'] = (projectId, scoreId) => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.usePlots(projectId, scoreId);
+};
+
+export const usePlotAction: ProjectHooks['usePlotAction'] = () => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.usePlotAction();
 };
 
 export const useNotes: ProjectHooks['useNotes'] = (projectId, scoreId) => {
