@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { collectionName } from 'services/projectscore/constants';
 import { blankProject } from 'services/projectscore/models/project';
 import { blankScore } from 'services/projectscore/models/score';
+import { blankMemo } from 'services/projectscore/models/memo';
 import { blankPlot, plotTypeList } from 'services/projectscore/models/plot';
 import {
   blankNote,
@@ -48,6 +49,17 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
           .collection(collectionName.scores)
           .doc(newScore.id);
         await scoreDoc.set(newScore);
+
+        const newMemo = {
+          ...blankMemo,
+          id: uuid(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        await scoreDoc
+          .collection(collectionName.memos)
+          .doc(newMemo.id)
+          .set(newMemo);
 
         const newPlots = plotTypeList.map((plotType) => ({
           ...blankPlot,

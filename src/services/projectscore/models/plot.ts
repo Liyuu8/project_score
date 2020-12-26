@@ -3,7 +3,7 @@ import firebase from 'firebase';
 export type Plot = {
   id: string;
   content: string;
-  type: keyof typeof plotElements;
+  type: keyof typeof plotElements | null;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -11,7 +11,7 @@ export type Plot = {
 export const blankPlot: Plot = {
   id: '',
   content: '',
-  type: 'memo',
+  type: null,
   createdAt: null,
   updatedAt: null,
 };
@@ -25,7 +25,6 @@ export const plotElements = {
   surroundings: { name: '環境' },
   competitor: { name: '競合' },
   enemy: { name: '外敵' },
-  memo: { name: 'メモ' },
 } as const;
 
 export const plotTypeList: (keyof typeof plotElements)[] = [
@@ -37,5 +36,4 @@ export const plotTypeList: (keyof typeof plotElements)[] = [
   'surroundings',
   'competitor',
   'enemy',
-  'memo',
 ];

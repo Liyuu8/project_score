@@ -14,7 +14,11 @@ const Projects: FC<ProjectsProps> = ({ projects, loading }) => {
 
   return (
     <StyledDiv>
-      {loading ? <ListLoader /> : <ProjectList projects={projects} />}
+      {loading ? (
+        <ListLoader size="wide" />
+      ) : (
+        <ProjectList projects={projects} />
+      )}
     </StyledDiv>
   );
 };

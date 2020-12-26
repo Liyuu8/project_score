@@ -59,4 +59,14 @@ const ModalForAddOrEdit: FC<Props> = ({
   );
 };
 
+export const addOrEditModalId = {
+  addNote: 'addNote:',
+  editNote: 'editNote:',
+  addScoreMemo: 'addScoreMemo:',
+  editScoreMemo: 'editScoreMemo:',
+  addGoodFinding: 'addGoodFinding',
+  addBadFinding: 'addBadFinding',
+  editFinding: 'editFinding:',
+} as const;
+
 export default ModalForAddOrEdit;

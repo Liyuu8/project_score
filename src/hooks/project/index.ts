@@ -3,6 +3,7 @@ import { createContext } from 'react';
 import { useClient } from 'hooks/di';
 import { Project } from 'services/projectscore/models/project';
 import { Score } from 'services/projectscore/models/score';
+import { Memo } from 'services/projectscore/models/memo';
 import { Plot } from 'services/projectscore/models/plot';
 import { Note, noteElements } from 'services/projectscore/models/note';
 import { NoteConnection } from 'services/projectscore/models/connection';
@@ -57,6 +58,32 @@ export type ProjectHooks = {
   useScoreDataAction: () => {
     addScoreData: (projectId: string) => Promise<void>;
     deleteScoreData: (projectId: string, scoreId: string) => Promise<void>;
+  };
+
+  useMemos: (
+    projectId: string,
+    scoreId: string
+  ) => {
+    memos: Memo[];
+    loading: boolean;
+    error: Error | undefined;
+  };
+  useMemoAction: () => {
+    addMemo: (
+      projectId: string,
+      scoreId: string,
+      content: string
+    ) => Promise<void>;
+    updateMemo: (
+      projectId: string,
+      scoreId: string,
+      updatedMemo: Memo
+    ) => Promise<void>;
+    deleteMemo: (
+      projectId: string,
+      scoreId: string,
+      memoId: string
+    ) => Promise<void>;
   };
 
   usePlots: (
@@ -189,6 +216,18 @@ export const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
   const client = useClient(ProjectHooksContext);
 
   return client.useScoreDataAction();
+};
+
+export const useMemos: ProjectHooks['useMemos'] = (projectId, scoreId) => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useMemos(projectId, scoreId);
+};
+
+export const useMemoAction: ProjectHooks['useMemoAction'] = () => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useMemoAction();
 };
 
 export const usePlots: ProjectHooks['usePlots'] = (projectId, scoreId) => {

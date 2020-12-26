@@ -2,7 +2,6 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Dimmer, Grid, Loader, Popup, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { Project } from 'services/projectscore/models/project';
 import { useScoreDataAction, useScores } from 'hooks/project';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
@@ -12,7 +11,7 @@ interface Panes {
   menuItem: string | { key: string; icon: string };
 }
 
-const ProjectMain: FC<{ project: Project }> = ({ project }) => {
+const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
   const StyledGrid = styled(Grid)`
     &&& {
       padding: 1rem;
@@ -24,7 +23,7 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
     }
   `;
 
-  const { scores, loading } = useScores(project.id);
+  const { scores, loading } = useScores(projectId);
   const { addScoreData, deleteScoreData } = useScoreDataAction();
   const [panes, setPanes] = useState<Panes[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -41,14 +40,14 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
           pane: {
             key: score.stage.toString(),
             attached: false,
-            content: <ScoreBoard projectId={project.id} scoreId={score.id} />,
+            content: <ScoreBoard projectId={projectId} scoreId={score.id} />,
           },
         }))
       );
       setActiveIndex(scores.length - 1);
       console.log('scoresLength', scores.length);
     };
-  }, [project, scores]);
+  }, [projectId, scores]);
 
   useEffect(() => {
     paneInfoMemo();
@@ -59,16 +58,16 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
       // TODO: 警告画面を表示する
       return;
     }
-    await addScoreData(project.id);
-  }, [addScoreData, project, scores]);
+    await addScoreData(projectId);
+  }, [addScoreData, projectId, scores]);
 
   const removeStage = useCallback(async () => {
     if (scores.length === 1) {
       // TODO: 警告画面を表示する
       return;
     }
-    await deleteScoreData(project.id, scores[activeIndex].id);
-  }, [deleteScoreData, project, scores, activeIndex]);
+    await deleteScoreData(projectId, scores[activeIndex].id);
+  }, [deleteScoreData, projectId, scores, activeIndex]);
 
   return loading ? (
     <Dimmer active inverted>
@@ -110,7 +109,7 @@ const ProjectMain: FC<{ project: Project }> = ({ project }) => {
       </Grid.Column>
       <Grid.Column width={3}>
         {scores[activeIndex] && (
-          <Plots projectId={project.id} scoreId={scores[activeIndex].id} />
+          <Plots projectId={projectId} scoreId={scores[activeIndex].id} />
         )}
       </Grid.Column>
     </StyledGrid>

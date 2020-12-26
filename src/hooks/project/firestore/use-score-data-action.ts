@@ -39,6 +39,8 @@ const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
         .collection(collectionName.scores)
         .doc(lastScore.id);
 
+      // Not copy last memos
+
       // Copy last plots
 
       const lastScorePlotSnap = await lastScoreDoc

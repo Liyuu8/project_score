@@ -50,4 +50,10 @@ const ModalForDelete: FC<Props> = ({
   );
 };
 
+export const deleteModalId = {
+  note: 'note:',
+  scoreMemo: 'scoreMemo:',
+  finding: 'finding:',
+} as const;
+
 export default ModalForDelete;

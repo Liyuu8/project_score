@@ -85,3 +85,9 @@ export const noteElements = {
     posY: null,
   },
 } as const;
+
+export const additionalNoteTypeList: (keyof typeof noteElements)[] = [
+  'measure',
+  'intermediateObjective',
+  'victoryCondition',
+];

@@ -3,8 +3,12 @@ import { Button, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { useNoteAction } from 'hooks/project';
+import {
+  additionalNoteTypeList,
+  noteElements,
+} from 'services/projectscore/models/note';
 import ScoreCore from './ScoreCore';
-import ModalForAddOrEdit from './ModalForAddOrEdit';
+import ModalForAddOrEdit, { addOrEditModalId } from './ModalForAddOrEdit';
 import ScoreMemo from './ScoreMemo';
 
 interface Props {
@@ -20,8 +24,7 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
   `;
   const StyledButton = styled(Button)`
     &&& {
-      margin-left: 10px;
-      margin-right: 10px;
+      margin: 5px;
     }
   `;
 
@@ -31,42 +34,28 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
     <>
       <ScoreCore projectId={projectId} scoreId={scoreId} />
       <StyledGrid doubling columns={2}>
-        <Grid.Column width={6} verticalAlign="middle">
-          <ModalForAddOrEdit
-            id="newMeasure"
-            label="施策"
-            button={
-              <StyledButton icon="add" label="施策" labelPosition="left" />
-            }
-            onActionClick={(isSubmitted, content) =>
-              isSubmitted && addNote(projectId, scoreId, content, 'measure')
-            }
-          />
-          <ModalForAddOrEdit
-            id="newIntermediateObjective"
-            label="中間目標"
-            button={
-              <StyledButton icon="add" label="中間目標" labelPosition="left" />
-            }
-            onActionClick={(isSubmitted, content) =>
-              isSubmitted &&
-              addNote(projectId, scoreId, content, 'intermediateObjective')
-            }
-          />
-          <ModalForAddOrEdit
-            id="newVictoryCondition"
-            label="勝利条件"
-            button={
-              <StyledButton icon="add" label="勝利条件" labelPosition="left" />
-            }
-            onActionClick={(isSubmitted, content) =>
-              isSubmitted &&
-              addNote(projectId, scoreId, content, 'victoryCondition')
-            }
-          />
-        </Grid.Column>
         <Grid.Column width={10}>
           <ScoreMemo projectId={projectId} scoreId={scoreId} />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          {additionalNoteTypeList.map((noteType) => (
+            <ModalForAddOrEdit
+              key={noteType}
+              id={addOrEditModalId.addNote + noteType}
+              label={noteElements[noteType].name}
+              button={
+                <StyledButton
+                  icon="add"
+                  size="mini"
+                  label={noteElements[noteType].name}
+                  labelPosition="left"
+                />
+              }
+              onActionClick={(isSubmitted, content) =>
+                isSubmitted && addNote(projectId, scoreId, content, noteType)
+              }
+            />
+          ))}
         </Grid.Column>
       </StyledGrid>
     </>

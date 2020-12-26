@@ -16,9 +16,9 @@ const PlotTextArea: FC<{
   return (
     <Form.TextArea
       key={plot.id}
-      label={plotElements[plot.type].name}
+      label={plot.type ? plotElements[plot.type].name : ''}
       placeholder="記入欄"
-      rows={plot.type === 'memo' ? 2 : 1}
+      rows={1}
       value={plot ? plot.content : ''}
       // ISSUE:
       // 高速で入力する値を変化させると、DBへの書き込み⇨読み込みの処理が追いつかない
