@@ -33,6 +33,7 @@ export type ProjectHooks = {
       projectId: string,
       updatedProject: Project
     ) => Promise<void>;
+    deleteProject: (projectId: string) => Promise<void>;
   };
 
   useProjectScoreAction: () => {
@@ -41,7 +42,6 @@ export type ProjectHooks = {
       title: string,
       description: string
     ) => Promise<void>;
-    deleteProjectScore: (projectId: string) => Promise<void>;
   };
 
   useScores: (

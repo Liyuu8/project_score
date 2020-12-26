@@ -48,7 +48,7 @@ const ModalForAddOrEdit: FC<Props> = ({
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="red" onClick={() => handleClick(false)}>
+        <Button color="grey" onClick={() => handleClick(false)}>
           <Icon name="remove" /> キャンセル
         </Button>
         <Button color="green" onClick={() => handleClick(true)}>

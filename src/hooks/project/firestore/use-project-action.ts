@@ -7,7 +7,6 @@ import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
 const useProjectAction: ProjectHooks['useProjectAction'] = () => {
-  // TODO: 動作確認
   const updateProject = useCallback(
     async (projectId: string, updatedProject: Project) => {
       if (!updatedProject.title) {
@@ -30,7 +29,12 @@ const useProjectAction: ProjectHooks['useProjectAction'] = () => {
     []
   );
 
-  return { updateProject };
+  // TODO: サブコレクションの削除
+  const deleteProject = useCallback(async (projectId: string) => {
+    await db.collection(collectionName.projects).doc(projectId).delete();
+  }, []);
+
+  return { updateProject, deleteProject };
 };
 
 export default useProjectAction;

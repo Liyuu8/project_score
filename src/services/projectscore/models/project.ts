@@ -3,7 +3,7 @@ import firebase from 'firebase';
 export type Project = {
   id: string;
   title: string;
-  description: string | null;
+  description: string;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -11,7 +11,7 @@ export type Project = {
 export const blankProject: Project = {
   id: '',
   title: '',
-  description: null,
+  description: '',
   createdAt: null,
   updatedAt: null,
 };

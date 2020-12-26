@@ -118,13 +118,7 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
     []
   );
 
-  // TODO: 動作確認
-  // TODO: サブコレクションの削除
-  const deleteProjectScore = useCallback(async (id: string) => {
-    await db.collection(collectionName.projects).doc(id).delete();
-  }, []);
-
-  return { addProjectScore, deleteProjectScore };
+  return { addProjectScore };
 };
 
 export default useProjectScoreAction;
