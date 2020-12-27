@@ -25,13 +25,13 @@ const ModalActionButtons: FC<Props> = ({
     <Modal.Actions>
       <Grid columns={2}>
         {isExisting && (
-          <Grid.Column floated="left" textAlign="left" width={6}>
+          <Grid.Column floated="left" textAlign="left" width={5}>
             <Button color="red" onClick={handleDelete}>
               <Icon name="trash" /> 削除
             </Button>
           </Grid.Column>
         )}
-        <Grid.Column floated="right" textAlign="right" width={10}>
+        <Grid.Column floated="right" textAlign="right" width={11}>
           <StyledButton color="grey" onClick={handleCancel}>
             <Icon name="remove" /> キャンセル
           </StyledButton>

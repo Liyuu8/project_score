@@ -53,11 +53,22 @@ export type ProjectHooks = {
   };
   useScoreAction: () => {
     updateScore: (projectId: string, updatedScore: Score) => Promise<void>;
+    deleteScore: (
+      projectId: string,
+      scoreId: string,
+      deletedIndex: number
+    ) => Promise<void>;
   };
 
   useScoreDataAction: () => {
-    addScoreData: (projectId: string) => Promise<void>;
-    deleteScoreData: (projectId: string, scoreId: string) => Promise<void>;
+    addScoreDataFromExisiting: (
+      projectId: string,
+      title: string
+    ) => Promise<void>;
+    addScoreDataFromScratch: (
+      projectId: string,
+      title: string
+    ) => Promise<void>;
   };
 
   useMemos: (

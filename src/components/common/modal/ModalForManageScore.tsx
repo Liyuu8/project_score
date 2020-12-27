@@ -1,32 +1,36 @@
 import React, { FC, useCallback, useState } from 'react';
-import { useHistory } from 'react-router';
 import { Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 
-import { useProjectAction, useProjectScoreAction } from 'hooks/project';
-import { Project } from 'services/projectscore/models/project';
-import paths from 'utils/paths';
+import { useScoreAction, useScoreDataAction } from 'hooks/project';
+import { Score } from 'services/projectscore/models/score';
 import ModalActionButtons from 'components/common/buttons/ModalActionButtons';
 
 interface Props {
-  project?: Project;
+  projectId: string;
+  score?: Score;
   triggerButton: React.ReactNode;
 }
 
-const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
-  const history = useHistory();
+const ModalForManageScore: FC<Props> = ({
+  projectId,
+  score,
+  triggerButton,
+}) => {
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const { addProjectScore } = useProjectScoreAction();
-  const { updateProject, deleteProject } = useProjectAction();
+  const [isCopyLastScore, setIsCopyLastScore] = useState(true);
+  const {
+    addScoreDataFromExisiting,
+    addScoreDataFromScratch,
+  } = useScoreDataAction();
+  const { updateScore, deleteScore } = useScoreAction();
 
   const openModal = () => {
     setOpen(true);
-    setTitle(project ? project.title : '');
-    setDescription(project ? project.description : '');
+    setTitle(score ? score.title : '');
+    setIsCopyLastScore(true);
   };
 
   const closeModal = () => {
@@ -41,36 +45,43 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
       return;
     }
 
-    if (!project?.title) {
-      setPending(true);
-      const projectId = uuid();
-      await addProjectScore(projectId, title, description);
-      setPending(false);
-      history.push(`/project/${projectId}`);
+    setPending(true);
+    if (!score?.title) {
+      if (isCopyLastScore) {
+        await addScoreDataFromExisiting(projectId, title);
+      } else {
+        await addScoreDataFromScratch(projectId, title);
+      }
     } else {
-      setPending(true);
-      await updateProject(project.id, { ...project, title, description });
-      setPending(false);
+      await updateScore(projectId, { ...score, title });
     }
+
+    setPending(false);
+
     closeModal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, addProjectScore]);
+  }, [
+    projectId,
+    score,
+    title,
+    isCopyLastScore,
+    addScoreDataFromExisiting,
+    addScoreDataFromScratch,
+    updateScore,
+  ]);
 
   const handleCancel = useCallback(async () => closeModal(), []);
 
   const handleDelete = useCallback(async () => {
-    if (!project) {
+    if (!score) {
       return;
     }
 
     setPending(true);
-    await deleteProject(project.id);
+    await deleteScore(projectId, score.id, score.index);
     setPending(false);
 
-    history.replace(paths.home);
     closeModal();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project, deleteProject]);
+  }, [projectId, score, deleteScore]);
 
   return (
     <Modal
@@ -85,10 +96,8 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
         <Loader inverted content="Loading" />
       </Dimmer>
       <Header
-        icon={!project?.title ? 'file outline' : 'options'}
-        content={
-          !project?.title ? '新しいプロジェクトの追加' : 'プロジェクトの設定'
-        }
+        icon={!score?.title ? 'file outline' : 'options'}
+        content={!score?.title ? '新しい譜面の追加' : '譜面の設定'}
       />
       <Modal.Content>
         <Form>
@@ -105,18 +114,18 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
               }
             }}
           />
-          <Form.TextArea
-            label="Description"
-            placeholder="記入欄"
-            value={description}
-            onChange={(e, { value }) =>
-              setDescription(value ? value.toString() : '')
-            }
-          />
+          {!score && (
+            <Form.Checkbox
+              label="最新の譜面から複製して作成する"
+              toggle
+              checked={isCopyLastScore}
+              onChange={() => setIsCopyLastScore(!isCopyLastScore)}
+            />
+          )}
         </Form>
       </Modal.Content>
       <ModalActionButtons
-        isExisting={!!project}
+        isExisting={!!score}
         handleSubmit={handleSubmit}
         handleCancel={handleCancel}
         handleDelete={handleDelete}
@@ -125,4 +134,4 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
   );
 };
 
-export default ModalForManageProject;
+export default ModalForManageScore;

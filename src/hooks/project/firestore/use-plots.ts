@@ -12,7 +12,8 @@ const usePlots: ProjectHooks['usePlots'] = (projectId, scoreId) => {
       .doc(projectId)
       .collection(collectionName.scores)
       .doc(scoreId)
-      .collection(collectionName.plots),
+      .collection(collectionName.plots)
+      .orderBy('index', 'asc'),
     {
       idField: 'id',
       snapshotListenOptions: { includeMetadataChanges: true },

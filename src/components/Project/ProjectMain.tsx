@@ -1,8 +1,9 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Dimmer, Grid, Loader, Popup, Tab } from 'semantic-ui-react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Button, Dimmer, Grid, Icon, Loader, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
-import { useScoreDataAction, useScores } from 'hooks/project';
+import { useScores } from 'hooks/project';
+import ModalForManageScore from 'components/common/modal/ModalForManageScore';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 
@@ -17,14 +18,14 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
       padding: 1rem;
     }
   `;
-  const StyledButtonGroup = styled(Button.Group)`
+  const StyledButton = styled(Button)`
     &&& {
-      margin-left: 1rem;
+      margin-left: 10px;
+      margin-top: 5px;
     }
   `;
 
   const { scores, loading } = useScores(projectId);
-  const { addScoreData, deleteScoreData } = useScoreDataAction();
   const [panes, setPanes] = useState<Panes[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
@@ -36,38 +37,29 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
       }
       setPanes(
         scores.map((score) => ({
-          menuItem: score.title,
+          menuItem: score.index.toString(),
           pane: {
-            key: score.stage.toString(),
+            key: score.id,
             attached: false,
             content: <ScoreBoard projectId={projectId} scoreId={score.id} />,
           },
         }))
       );
-      setActiveIndex(scores.length - 1);
-      console.log('scoresLength', scores.length);
+      const latestScoreId =
+        scores.length === 1
+          ? scores[0].id
+          : scores
+              .slice()
+              .sort((a, b) =>
+                a.updatedAt && b.updatedAt && a.updatedAt < b.updatedAt ? 1 : -1
+              )[0].id;
+      setActiveIndex(scores.findIndex((score) => score.id === latestScoreId));
     };
   }, [projectId, scores]);
 
   useEffect(() => {
     paneInfoMemo();
   }, [paneInfoMemo]);
-
-  const addStage = useCallback(async () => {
-    if (scores.length > 5) {
-      // TODO: 警告画面を表示する
-      return;
-    }
-    await addScoreData(projectId);
-  }, [addScoreData, projectId, scores]);
-
-  const removeStage = useCallback(async () => {
-    if (scores.length === 1) {
-      // TODO: 警告画面を表示する
-      return;
-    }
-    await deleteScoreData(projectId, scores[activeIndex].id);
-  }, [deleteScoreData, projectId, scores, activeIndex]);
 
   return loading ? (
     <Dimmer active inverted>
@@ -76,16 +68,24 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
   ) : (
     <StyledGrid doubling columns={2}>
       <Grid.Column width={13}>
-        <StyledButtonGroup floated="right" size="large">
-          <Popup
-            content="Add new stage"
-            trigger={<Button icon="add" onClick={addStage} />}
-          />
-          <Popup
-            content="Delete stage"
-            trigger={<Button icon="delete" onClick={removeStage} />}
-          />
-        </StyledButtonGroup>
+        <ModalForManageScore
+          projectId={projectId}
+          triggerButton={
+            <StyledButton color="teal" floated="right">
+              New Score
+            </StyledButton>
+          }
+        />
+        <ModalForManageScore
+          projectId={projectId}
+          score={scores[activeIndex]}
+          triggerButton={
+            <StyledButton basic icon labelPosition="right" floated="right">
+              <Icon name="options" />
+              {scores[activeIndex]?.title}
+            </StyledButton>
+          }
+        />
         <Tab
           menu={{ pointing: true }}
           panes={panes}

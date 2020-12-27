@@ -11,7 +11,7 @@ const useScores: ProjectHooks['useScores'] = (projectId) => {
       .collection(collectionName.projects)
       .doc(projectId)
       .collection(collectionName.scores)
-      .orderBy('createdAt', 'asc'),
+      .orderBy('index', 'asc'),
     {
       idField: 'id',
       snapshotListenOptions: { includeMetadataChanges: true },

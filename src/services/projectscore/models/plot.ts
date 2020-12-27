@@ -3,6 +3,7 @@ import firebase from 'firebase';
 export type Plot = {
   id: string;
   content: string;
+  index: number | null;
   type: keyof typeof plotElements | null;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
@@ -11,6 +12,7 @@ export type Plot = {
 export const blankPlot: Plot = {
   id: '',
   content: '',
+  index: null,
   type: null,
   createdAt: null,
   updatedAt: null,
