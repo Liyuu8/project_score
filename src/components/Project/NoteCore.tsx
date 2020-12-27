@@ -4,8 +4,10 @@ import styled from '@emotion/styled';
 
 import { Note, noteElements } from 'services/projectscore/models/note';
 import { useFindingAction, useFindings, useNoteAction } from 'hooks/project';
-import ModalForAddOrEdit, { addOrEditModalId } from './ModalForAddOrEdit';
-import ModalForDelete, { deleteModalId } from './ModalForDelete';
+import ModalForAddOrEdit, {
+  addOrEditModalId,
+} from '../common/modal/ModalForAddOrEdit';
+import ModalForDelete, { deleteModalId } from '../common/modal/ModalForDelete';
 
 interface Property {
   projectId: string;
@@ -105,7 +107,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                   id={addOrEditModalId.editNote + note.id}
                   label={noteTitle}
                   content={noteContent}
-                  button={<Button icon="edit" />}
+                  triggerButton={<Button icon="edit" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     updateNote(projectId, scoreId, {
                       ...note,
@@ -116,7 +118,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                 <ModalForAddOrEdit
                   id={addOrEditModalId.addGoodFinding}
                   label="得られた知見"
-                  button={<Button icon="thumbs up outline" />}
+                  triggerButton={<Button icon="thumbs up outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     addFinding(projectId, scoreId, note.id, newContent, true)
                   )}
@@ -124,7 +126,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                 <ModalForAddOrEdit
                   id={addOrEditModalId.addBadFinding}
                   label="得られた知見"
-                  button={<Button icon="thumbs down outline" />}
+                  triggerButton={<Button icon="thumbs down outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
                     addFinding(projectId, scoreId, note.id, newContent, false)
                   )}
@@ -133,7 +135,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                   id={deleteModalId.note + note.id}
                   label={noteTitle}
                   content={noteContent}
-                  button={<Button icon="trash" />}
+                  triggerButton={<Button icon="trash" />}
                   onActionClick={handleModalActionForDelete(() =>
                     deleteNote(projectId, scoreId, note.id)
                   )}
@@ -169,7 +171,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                       id={addOrEditModalId.editFinding + finding.id}
                       label="得られた知見"
                       content={finding.content}
-                      button={<Button icon="edit" />}
+                      triggerButton={<Button icon="edit" />}
                       onActionClick={handleModalActionForAddOrEdit(
                         (newContent) =>
                           updateFinding(projectId, scoreId, note.id, {
@@ -182,7 +184,7 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                       id={deleteModalId.finding + finding.id}
                       label="得られた知見"
                       content={finding.content}
-                      button={<Button icon="trash" />}
+                      triggerButton={<Button icon="trash" />}
                       onActionClick={handleModalActionForDelete(() =>
                         deleteFinding(projectId, scoreId, note.id, finding.id)
                       )}

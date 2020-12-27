@@ -5,7 +5,7 @@ interface Props {
   id: string;
   label: string;
   content: string;
-  button: React.ReactNode;
+  triggerButton: React.ReactNode;
   onActionClick: (isSubmitted: boolean) => void;
 }
 
@@ -13,7 +13,7 @@ const ModalForDelete: FC<Props> = ({
   id,
   label,
   content,
-  button,
+  triggerButton,
   onActionClick,
 }) => {
   const [openedModalKey, setOpenedModalKey] = useState('');
@@ -28,7 +28,7 @@ const ModalForDelete: FC<Props> = ({
   return (
     <Modal
       closeIcon
-      trigger={button}
+      trigger={triggerButton}
       size="tiny"
       open={openedModalKey === id}
       onOpen={() => setOpenedModalKey(id)}

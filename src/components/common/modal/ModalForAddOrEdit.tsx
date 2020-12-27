@@ -5,7 +5,7 @@ interface Props {
   id: string;
   label: string;
   content?: string;
-  button: React.ReactNode;
+  triggerButton: React.ReactNode;
   onActionClick: (isSubmitted: boolean, content: string) => void;
 }
 
@@ -13,7 +13,7 @@ const ModalForAddOrEdit: FC<Props> = ({
   id,
   label,
   content = '',
-  button,
+  triggerButton,
   onActionClick,
 }) => {
   const [formContent, setFormContent] = useState(content);
@@ -29,7 +29,7 @@ const ModalForAddOrEdit: FC<Props> = ({
   return (
     <Modal
       closeIcon
-      trigger={button}
+      trigger={triggerButton}
       size="tiny"
       open={openedModalKey === id}
       onOpen={() => setOpenedModalKey(id)}

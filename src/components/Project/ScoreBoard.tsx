@@ -8,7 +8,9 @@ import {
   noteElements,
 } from 'services/projectscore/models/note';
 import ScoreCore from './ScoreCore';
-import ModalForAddOrEdit, { addOrEditModalId } from './ModalForAddOrEdit';
+import ModalForAddOrEdit, {
+  addOrEditModalId,
+} from '../common/modal/ModalForAddOrEdit';
 import ScoreMemo from './ScoreMemo';
 
 interface Props {
@@ -43,7 +45,7 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
               key={noteType}
               id={addOrEditModalId.addNote + noteType}
               label={noteElements[noteType].name}
-              button={
+              triggerButton={
                 <StyledButton
                   icon="add"
                   size="mini"

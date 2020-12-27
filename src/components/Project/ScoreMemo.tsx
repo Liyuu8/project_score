@@ -4,8 +4,10 @@ import styled from '@emotion/styled';
 
 import { useMemoAction, useMemos } from 'hooks/project';
 import ListLoader from 'components/common/atoms/ListLoader';
-import ModalForAddOrEdit, { addOrEditModalId } from './ModalForAddOrEdit';
-import ModalForDelete, { deleteModalId } from './ModalForDelete';
+import ModalForAddOrEdit, {
+  addOrEditModalId,
+} from '../common/modal/ModalForAddOrEdit';
+import ModalForDelete, { deleteModalId } from '../common/modal/ModalForDelete';
 
 const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
   projectId,
@@ -32,7 +34,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
         <ModalForAddOrEdit
           id={addOrEditModalId.addScoreMemo}
           label="メモ"
-          button={<StyledButton icon="add" size="mini" />}
+          triggerButton={<StyledButton icon="add" size="mini" />}
           onActionClick={(isSubmitted, content) =>
             isSubmitted && addMemo(projectId, scoreId, content)
           }
@@ -50,7 +52,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
                   id={addOrEditModalId.editScoreMemo + memo.id}
                   label="メモ"
                   content={memo.content}
-                  button={<Button icon="edit" />}
+                  triggerButton={<Button icon="edit" />}
                   onActionClick={(isSubmitted, content) =>
                     isSubmitted &&
                     updateMemo(projectId, scoreId, { ...memo, content })
@@ -60,7 +62,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
                   id={deleteModalId.scoreMemo + memo.id}
                   label="メモ"
                   content={memo.content}
-                  button={<Button icon="delete" />}
+                  triggerButton={<Button icon="delete" />}
                   onActionClick={(isSubmitted) =>
                     isSubmitted && deleteMemo(projectId, scoreId, memo.id)
                   }

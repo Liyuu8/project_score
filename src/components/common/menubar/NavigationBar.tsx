@@ -6,7 +6,7 @@ import { Button, Grid, Icon, Menu, Sidebar } from 'semantic-ui-react';
 
 import { ThemeContext } from 'contexts/contexts';
 import paths from 'utils/paths';
-import ModalForManageProject from 'components/Project/ModalForManageProject';
+import ModalForManageProject from 'components/common/modal/ModalForManageProject';
 import { useProject } from 'hooks/project';
 
 const NavigationBar: FC = () => {
