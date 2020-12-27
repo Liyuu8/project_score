@@ -42,10 +42,6 @@ const useNoteAction: ProjectHooks['useNoteAction'] = () => {
 
   const updateNote = useCallback(
     async (projectId: string, scoreId: string, updatedNote: Note) => {
-      if (!updatedNote.content) {
-        return;
-      }
-
       try {
         const newNote = {
           ...updatedNote,

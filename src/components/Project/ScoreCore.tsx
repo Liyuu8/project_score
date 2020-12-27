@@ -1,4 +1,3 @@
-import { useConnections, useNotes } from 'hooks/project';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
   removeElements,
@@ -10,7 +9,8 @@ import ReactFlow, {
   ReactFlowProvider,
 } from 'react-flow-renderer';
 
-import { noteElements } from 'services/projectscore/models/note';
+import { Note, noteElements } from 'services/projectscore/models/note';
+import { useConnections, useNoteAction, useNotes } from 'hooks/project';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {
@@ -23,6 +23,7 @@ const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
   const { notes } = useNotes(projectId, scoreId);
   const { connections } = useConnections(projectId, scoreId);
+  const { updateNote } = useNoteAction();
   const [flowElements, setFlowElements] = useState<Elements>([]);
 
   const flowElementsMemo = useMemo(() => {
@@ -84,6 +85,14 @@ const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
         nodeTypes={{ noteNode: NoteWrapper }}
         connectionLineStyle={{ stroke: '#fff' }}
         onlyRenderVisibleElements={false}
+        onNodeDragStop={(e, node) => {
+          const updatedNote = {
+            ...notes.find((note) => note.id === node.id),
+            posX: node.position.x,
+            posY: node.position.y,
+          } as Note;
+          updateNote(projectId, scoreId, updatedNote);
+        }}
       >
         <Controls />
       </ReactFlow>
