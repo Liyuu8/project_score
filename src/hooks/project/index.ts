@@ -148,10 +148,19 @@ export type ProjectHooks = {
     loading: boolean;
     error: Error | undefined;
   };
-  // useConnectionAction: () => {
-  //   addConnection: () => Promise<void>;
-  //   deleteConnection: (id: string) => Promise<void>;
-  // };
+  useConnectionAction: () => {
+    addConnection: (
+      projectId: string,
+      scoreId: string,
+      source: string,
+      target: string
+    ) => Promise<void>;
+    deleteConnection: (
+      projectId: string,
+      scoreId: string,
+      connectionId: string
+    ) => Promise<void>;
+  };
 
   useFindings: (
     projectId: string,
@@ -272,6 +281,12 @@ export const useConnections: ProjectHooks['useConnections'] = (
   const client = useClient(ProjectHooksContext);
 
   return client.useConnections(projectId, scoreId);
+};
+
+export const useConnectionAction: ProjectHooks['useConnectionAction'] = () => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useConnectionAction();
 };
 
 export const useFindings: ProjectHooks['useFindings'] = (

@@ -1,16 +1,20 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
-  removeElements,
-  addEdge,
   Controls,
   Elements,
   Connection,
   Edge,
   ReactFlowProvider,
+  FlowElement,
 } from 'react-flow-renderer';
 
 import { Note, noteElements } from 'services/projectscore/models/note';
-import { useConnections, useNoteAction, useNotes } from 'hooks/project';
+import {
+  useConnectionAction,
+  useConnections,
+  useNoteAction,
+  useNotes,
+} from 'hooks/project';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {
@@ -19,11 +23,13 @@ interface Props {
 }
 
 const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
+const selectedStrokeStyle = { stroke: '#f00', strokeWidth: '3px' };
 
 const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
   const { notes } = useNotes(projectId, scoreId);
   const { connections } = useConnections(projectId, scoreId);
   const { updateNote } = useNoteAction();
+  const { addConnection, deleteConnection } = useConnectionAction();
   const [flowElements, setFlowElements] = useState<Elements>([]);
 
   const flowElementsMemo = useMemo(() => {
@@ -60,24 +66,33 @@ const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
     flowElementsMemo();
   }, [flowElementsMemo]);
 
+  const styleSelectedConnection = (elements: Elements | null) => {
+    const selectedConnection =
+      elements &&
+      connections.find((connection) => connection.id === elements[0].id);
+
+    const getSelectedElement = (flowElement: FlowElement) => ({
+      ...flowElement,
+      style: selectedStrokeStyle,
+    });
+    const getNotSelectedElement = (flowElement: FlowElement) =>
+      connections.some((connection) => connection.id === flowElement.id)
+        ? { ...flowElement, style: strokeStyle }
+        : flowElement;
+
+    const updatedFlowElements: Elements = flowElements.map((flowElement) =>
+      flowElement.id === selectedConnection?.id
+        ? getSelectedElement(flowElement)
+        : getNotSelectedElement(flowElement)
+    );
+
+    setFlowElements(updatedFlowElements);
+  };
+
   return (
     <ReactFlowProvider>
       <ReactFlow
         elements={flowElements}
-        // onElementClick={(
-        //   event: React.MouseEvent<Element, MouseEvent>,
-        //   element: FlowElement
-        // ): void => console.log('click', element, event)}
-        onElementsRemove={(elementsToRemove: Elements) =>
-          setFlowElements((element) =>
-            removeElements(elementsToRemove, element)
-          )
-        }
-        onConnect={(params: Edge | Connection) =>
-          setFlowElements((element) =>
-            addEdge({ ...params, animated: true, style: strokeStyle }, element)
-          )
-        }
         style={{
           background: '#EDEDED',
           height: 'calc(100vh - 290px)',
@@ -93,6 +108,15 @@ const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
           } as Note;
           updateNote(projectId, scoreId, updatedNote);
         }}
+        onConnect={(params: Edge | Connection) =>
+          params.source &&
+          params.target &&
+          addConnection(projectId, scoreId, params.source, params.target)
+        }
+        onElementsRemove={(elements: Elements) =>
+          deleteConnection(projectId, scoreId, elements[0].id)
+        }
+        onSelectionChange={styleSelectedConnection}
       >
         <Controls />
       </ReactFlow>

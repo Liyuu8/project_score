@@ -15,6 +15,7 @@ import usePlotAction from 'hooks/project/firestore/use-plot-action';
 import useNotes from 'hooks/project/firestore/use-notes';
 import useNoteAction from 'hooks/project/firestore/use-note-action';
 import useConnections from 'hooks/project/firestore/use-connections';
+import useConnectionAction from 'hooks/project/firestore/use-connection-action';
 import useFindings from 'hooks/project/firestore/use-findings';
 import useFindingAction from 'hooks/project/firestore/use-finding-action';
 
@@ -36,6 +37,7 @@ const FirebaseApp: FC = ({ children }) => {
         useNotes,
         useNoteAction,
         useConnections,
+        useConnectionAction,
         useFindings,
         useFindingAction,
       }}

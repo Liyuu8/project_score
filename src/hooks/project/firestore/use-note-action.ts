@@ -65,14 +65,25 @@ const useNoteAction: ProjectHooks['useNoteAction'] = () => {
   // TODO: サブコレクションの削除
   const deleteNote = useCallback(
     async (projectId: string, scoreId: string, noteId: string) => {
-      await db
+      const scoreDoc = await db
         .collection(collectionName.projects)
         .doc(projectId)
         .collection(collectionName.scores)
-        .doc(scoreId)
-        .collection(collectionName.notes)
-        .doc(noteId)
-        .delete();
+        .doc(scoreId);
+
+      scoreDoc.collection(collectionName.notes).doc(noteId).delete();
+
+      const sourceNoteSnap = await scoreDoc
+        .collection(collectionName.connections)
+        .where('sourceNoteId', '==', noteId)
+        .get();
+      sourceNoteSnap.docs.forEach((doc) => doc.ref.delete());
+
+      const targetNoteSnap = await scoreDoc
+        .collection(collectionName.connections)
+        .where('targetNoteId', '==', noteId)
+        .get();
+      targetNoteSnap.docs.forEach((doc) => doc.ref.delete());
     },
     []
   );
