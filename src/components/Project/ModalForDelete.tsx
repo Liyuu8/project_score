@@ -34,7 +34,7 @@ const ModalForDelete: FC<Props> = ({
       onOpen={() => setOpenedModalKey(id)}
       onClose={() => setOpenedModalKey('')}
     >
-      <Header icon="trash" content={`${label}の削除`} />
+      <Header icon="checkmark" content={`${label}の削除`} />
       <Modal.Content>
         <p>{content}</p>
       </Modal.Content>
@@ -43,7 +43,7 @@ const ModalForDelete: FC<Props> = ({
           <Icon name="remove" /> キャンセル
         </Button>
         <Button color="red" onClick={() => handleClick(true)}>
-          <Icon name="checkmark" /> 削除
+          <Icon name="trash" /> 削除
         </Button>
       </Modal.Actions>
     </Modal>

@@ -1,21 +1,12 @@
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
-import {
-  Button,
-  Dimmer,
-  Form,
-  Grid,
-  Header,
-  Icon,
-  Loader,
-  Modal,
-} from 'semantic-ui-react';
+import { Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
-import styled from '@emotion/styled';
 
 import { useProjectAction, useProjectScoreAction } from 'hooks/project';
 import { Project } from 'services/projectscore/models/project';
 import paths from 'utils/paths';
+import ModalActionButtons from 'components/common/buttons/ModalActionButtons';
 
 interface Props {
   project?: Project;
@@ -83,12 +74,6 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, deleteProject]);
 
-  const StyledButton = styled(Button)`
-    &&& {
-      margin-right: 15px;
-    }
-  `;
-
   return (
     <Modal
       closeIcon
@@ -102,11 +87,9 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
         <Loader inverted content="Loading" />
       </Dimmer>
       <Header
-        icon="edit"
+        icon={!project?.title ? 'file outline' : 'options'}
         content={
-          !project?.title
-            ? '新しいプロジェクトを追加する'
-            : 'プロジェクトを変更・削除する'
+          !project?.title ? '新しいプロジェクトの追加' : 'プロジェクトの設定'
         }
       />
       <Modal.Content>
@@ -134,25 +117,12 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
           />
         </Form>
       </Modal.Content>
-      <Modal.Actions>
-        <Grid columns={2}>
-          {project && (
-            <Grid.Column floated="left" textAlign="left">
-              <Button color="red" onClick={handleDelete}>
-                <Icon name="delete" /> 削除
-              </Button>
-            </Grid.Column>
-          )}
-          <Grid.Column floated="right" textAlign="right">
-            <StyledButton color="grey" onClick={handleCancel}>
-              キャンセル
-            </StyledButton>
-            <Button color="green" onClick={handleSubmit}>
-              <Icon name="checkmark" /> 決定
-            </Button>
-          </Grid.Column>
-        </Grid>
-      </Modal.Actions>
+      <ModalActionButtons
+        isExisting={!!project}
+        handleSubmit={handleSubmit}
+        handleCancel={handleCancel}
+        handleDelete={handleDelete}
+      />
     </Modal>
   );
 };

@@ -58,7 +58,7 @@ const NavigationBar: FC = () => {
               />
             )}
             <ModalForManageProject
-              triggerButton={<Button color="teal">New</Button>}
+              triggerButton={<Button color="teal">New Project</Button>}
             />
           </Grid.Column>
         </StyledGrid>
