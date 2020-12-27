@@ -15,6 +15,7 @@ import {
   useNoteAction,
   useNotes,
 } from 'hooks/project';
+import SizedLoader from 'components/common/atoms/SizedLoader';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {
@@ -26,8 +27,8 @@ const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 const selectedStrokeStyle = { stroke: '#f00', strokeWidth: '3px' };
 
 const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
-  const { notes } = useNotes(projectId, scoreId);
-  const { connections } = useConnections(projectId, scoreId);
+  const { notes, noteLoading } = useNotes(projectId, scoreId);
+  const { connections, connectionLoading } = useConnections(projectId, scoreId);
   const { updateNote } = useNoteAction();
   const { addConnection, deleteConnection } = useConnectionAction();
   const [flowElements, setFlowElements] = useState<Elements>([]);
@@ -89,7 +90,9 @@ const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
     setFlowElements(updatedFlowElements);
   };
 
-  return (
+  return noteLoading || connectionLoading ? (
+    <SizedLoader size="wide" />
+  ) : (
     <ReactFlowProvider>
       <ReactFlow
         elements={flowElements}

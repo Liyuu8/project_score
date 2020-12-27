@@ -3,7 +3,7 @@ import { Button, Message } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { useMemoAction, useMemos } from 'hooks/project';
-import ListLoader from 'components/common/atoms/ListLoader';
+import SizedLoader from 'components/common/atoms/SizedLoader';
 import ModalForAddOrEdit, {
   addOrEditModalId,
 } from '../common/modal/ModalForAddOrEdit';
@@ -41,7 +41,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
         />
       </Message.Header>
       {loading ? (
-        <ListLoader size="narrow" />
+        <SizedLoader size="narrow" />
       ) : (
         <Message.List>
           {memos.map((memo) => (

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Form, Header } from 'semantic-ui-react';
 
 import { usePlots } from 'hooks/project';
-import ListLoader from 'components/common/atoms/ListLoader';
+import SizedLoader from 'components/common/atoms/SizedLoader';
 import PlotTextArea from './PlotTextArea';
 
 const Plots: FC<{ projectId: string; scoreId: string }> = ({
@@ -15,7 +15,7 @@ const Plots: FC<{ projectId: string; scoreId: string }> = ({
     <Form>
       <Header as="h3">廟算八要素</Header>
       {loading ? (
-        <ListLoader size="wide" />
+        <SizedLoader size="wide" />
       ) : (
         plots.map((plot) => (
           <PlotTextArea

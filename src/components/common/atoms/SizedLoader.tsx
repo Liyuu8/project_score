@@ -7,7 +7,8 @@ type loaderSize = 'wide' | 'narrow';
 
 const WideLoader = styled(Segment)`
   &&& {
-    margin-top: 8rem;
+    margin-bottom: 14rem;
+    margin-top: 14rem;
   }
 `;
 const NarrowLoader = styled(Segment)`
@@ -16,7 +17,7 @@ const NarrowLoader = styled(Segment)`
   }
 `;
 
-const ListLoader: FC<{ size: loaderSize }> = ({ size }) =>
+const SizedLoader: FC<{ size: loaderSize }> = ({ size }) =>
   size === 'wide' ? (
     <WideLoader basic>
       <Loader active inline="centered" />
@@ -27,4 +28,4 @@ const ListLoader: FC<{ size: loaderSize }> = ({ size }) =>
     </NarrowLoader>
   );
 
-export default ListLoader;
+export default SizedLoader;

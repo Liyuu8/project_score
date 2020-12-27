@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { Project } from 'services/projectscore/models/project';
 import ProjectList from 'components/common/list/ProjectList';
-import ListLoader from 'components/common/atoms/ListLoader';
+import SizedLoader from 'components/common/atoms/SizedLoader';
 
 type ProjectsProps = { projects: Project[]; loading?: boolean };
 
@@ -15,7 +15,7 @@ const Projects: FC<ProjectsProps> = ({ projects, loading }) => {
   return (
     <StyledDiv>
       {loading ? (
-        <ListLoader size="wide" />
+        <SizedLoader size="wide" />
       ) : (
         <ProjectList projects={projects} />
       )}

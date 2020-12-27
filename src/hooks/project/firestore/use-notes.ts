@@ -6,7 +6,7 @@ import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
 const useNotes: ProjectHooks['useNotes'] = (projectId, scoreId) => {
-  const [notes, loading, error] = useCollectionData<Note>(
+  const [notes, noteLoading, error] = useCollectionData<Note>(
     db
       .collection(collectionName.projects)
       .doc(projectId)
@@ -19,7 +19,7 @@ const useNotes: ProjectHooks['useNotes'] = (projectId, scoreId) => {
     }
   );
 
-  return { notes: notes ?? [], loading, error };
+  return { notes: notes ?? [], noteLoading, error };
 };
 
 export default useNotes;

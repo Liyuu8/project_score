@@ -6,7 +6,9 @@ import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
 const useConnections: ProjectHooks['useConnections'] = (projectId, scoreId) => {
-  const [connections, loading, error] = useCollectionData<NoteConnection>(
+  const [connections, connectionLoading, error] = useCollectionData<
+    NoteConnection
+  >(
     db
       .collection(collectionName.projects)
       .doc(projectId)
@@ -19,7 +21,7 @@ const useConnections: ProjectHooks['useConnections'] = (projectId, scoreId) => {
     }
   );
 
-  return { connections: connections ?? [], loading, error };
+  return { connections: connections ?? [], connectionLoading, error };
 };
 
 export default useConnections;

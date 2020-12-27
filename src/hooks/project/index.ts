@@ -118,7 +118,7 @@ export type ProjectHooks = {
     scoreId: string
   ) => {
     notes: Note[];
-    loading: boolean;
+    noteLoading: boolean;
     error: Error | undefined;
   };
   useNoteAction: () => {
@@ -145,7 +145,7 @@ export type ProjectHooks = {
     scoreId: string
   ) => {
     connections: NoteConnection[];
-    loading: boolean;
+    connectionLoading: boolean;
     error: Error | undefined;
   };
   useConnectionAction: () => {
