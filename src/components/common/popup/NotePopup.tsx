@@ -124,15 +124,17 @@ const NotePopup: FC<Property> = ({
             )
           )}
         />
-        <ModalForDelete
-          id={deleteModalId.note + note.id}
-          label={noteTitle}
-          content={noteContent}
-          triggerButton={<Button icon="trash" />}
-          onActionClick={handleModalActionForDelete(() =>
-            deleteNote(projectId, scoreId, note.id)
-          )}
-        />
+        {noteTitle !== noteElements.acquisitionGoal.name && (
+          <ModalForDelete
+            id={deleteModalId.note + note.id}
+            label={noteTitle}
+            content={noteContent}
+            triggerButton={<Button icon="trash" />}
+            onActionClick={handleModalActionForDelete(() =>
+              deleteNote(projectId, scoreId, note.id)
+            )}
+          />
+        )}
       </Button.Group>
     </Popup>
   );

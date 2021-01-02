@@ -30,10 +30,9 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
       margin-left: 10px;
     }
   `;
-  const StyledButtonGroup = styled(Button.Group)`
-    &&& {
-      margin-left: 10px;
-    }
+  const ListContent = styled.div`
+    margin-bottom: 8px;
+    margin-top: 8px;
   `;
 
   return (
@@ -57,10 +56,10 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
       ) : (
         <Message.List>
           {memos.map((memo) => (
-            <div key={memo.id}>
+            <ListContent key={memo.id}>
               ・{memo.content}
               {userId && (
-                <StyledButtonGroup size="mini">
+                <Button.Group size="mini" floated="right" compact>
                   <ModalForAddOrEdit
                     id={addOrEditModalId.editScoreMemo + memo.id}
                     label="メモ"
@@ -75,14 +74,14 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
                     id={deleteModalId.scoreMemo + memo.id}
                     label="メモ"
                     content={memo.content}
-                    triggerButton={<Button icon="delete" />}
+                    triggerButton={<Button icon="trash" />}
                     onActionClick={(isSubmitted) =>
                       isSubmitted && deleteMemo(projectId, scoreId, memo.id)
                     }
                   />
-                </StyledButtonGroup>
+                </Button.Group>
               )}
-            </div>
+            </ListContent>
           ))}
         </Message.List>
       )}
