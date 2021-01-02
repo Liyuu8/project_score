@@ -5,14 +5,22 @@ import { Note } from 'services/projectscore/models/note';
 import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
-const useNotes: ProjectHooks['useNotes'] = (projectId, scoreId) => {
+const useNotes: ProjectHooks['useNotes'] = (
+  projectId,
+  scoreId,
+  isPublic,
+  authorId
+) => {
+  const noteRef = db
+    .collection(collectionName.projects)
+    .doc(projectId)
+    .collection(collectionName.scores)
+    .doc(scoreId)
+    .collection(collectionName.notes);
   const [notes, noteLoading, error] = useCollectionData<Note>(
-    db
-      .collection(collectionName.projects)
-      .doc(projectId)
-      .collection(collectionName.scores)
-      .doc(scoreId)
-      .collection(collectionName.notes),
+    isPublic
+      ? noteRef.where('isPublic', '==', true)
+      : noteRef.where('authorId', '==', authorId),
     {
       idField: 'id',
       snapshotListenOptions: { includeMetadataChanges: true },

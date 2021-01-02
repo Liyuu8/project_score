@@ -1,9 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button, Message } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { useMemoAction, useMemos } from 'hooks/project';
 import SizedLoader from 'components/common/atoms/SizedLoader';
+import { ProjectContext, UserContext } from 'contexts';
 import ModalForAddOrEdit, {
   addOrEditModalId,
 } from '../common/modal/ModalForAddOrEdit';
@@ -13,7 +14,15 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
   projectId,
   scoreId,
 }) => {
-  const { memos, loading } = useMemos(projectId, scoreId);
+  const { userId } = useContext(UserContext);
+  const { isPublicProject } = useContext(ProjectContext);
+
+  const { memos, loading } = useMemos(
+    projectId,
+    scoreId,
+    isPublicProject,
+    userId
+  );
   const { addMemo, updateMemo, deleteMemo } = useMemoAction();
 
   const StyledButton = styled(Button)`
@@ -36,7 +45,8 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
           label="メモ"
           triggerButton={<StyledButton icon="add" size="mini" />}
           onActionClick={(isSubmitted, content) =>
-            isSubmitted && addMemo(projectId, scoreId, content)
+            isSubmitted &&
+            addMemo(projectId, scoreId, content, userId, isPublicProject)
           }
         />
       </Message.Header>

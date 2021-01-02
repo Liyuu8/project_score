@@ -1,16 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 
 import Projects from 'components/Home/Projects';
-import { useProjects } from 'hooks/project';
+import { UserContext } from 'contexts';
 
 const ProjectsContainer: FC = () => {
-  const { projects, loading } = useProjects({ limit: 50 });
+  const { userId, authLoading } = useContext(UserContext);
 
-  return projects.length === 0 && !loading ? (
-    <></>
-  ) : (
-    <Projects projects={projects} loading={loading} />
-  );
+  return authLoading ? <></> : <Projects userId={userId} />;
 };
 
 export default ProjectsContainer;

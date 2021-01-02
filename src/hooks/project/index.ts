@@ -8,17 +8,26 @@ import { Plot } from 'services/projectscore/models/plot';
 import { Note, noteElements } from 'services/projectscore/models/note';
 import { NoteConnection } from 'services/projectscore/models/connection';
 import { Finding } from 'services/projectscore/models/finding';
+import { User } from 'services/projectscore/models/user';
 
 export type ProjectsOptions = {
   limit?: number;
 };
 
 export type ProjectHooks = {
-  useProjects: (
+  usePubProjects: (
     options?: ProjectsOptions
   ) => {
-    projects: Project[];
-    loading: boolean;
+    pubProjects: Project[];
+    pubProjectsLoading: boolean;
+    error: Error | undefined;
+  };
+  useMyProjects: (
+    authorId: string,
+    options?: ProjectsOptions
+  ) => {
+    myProjects: Project[];
+    myProjectsLoading: boolean;
     error: Error | undefined;
   };
   useProject: (
@@ -40,12 +49,16 @@ export type ProjectHooks = {
     addProjectScore: (
       projectId: string,
       title: string,
-      description: string
+      description: string,
+      authorId: string,
+      isPublic: boolean
     ) => Promise<void>;
   };
 
   useScores: (
-    projectId: string
+    projectId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     scores: Score[];
     loading: boolean;
@@ -73,7 +86,9 @@ export type ProjectHooks = {
 
   useMemos: (
     projectId: string,
-    scoreId: string
+    scoreId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     memos: Memo[];
     loading: boolean;
@@ -83,7 +98,9 @@ export type ProjectHooks = {
     addMemo: (
       projectId: string,
       scoreId: string,
-      content: string
+      content: string,
+      authorId: string,
+      isPublic: boolean
     ) => Promise<void>;
     updateMemo: (
       projectId: string,
@@ -99,7 +116,9 @@ export type ProjectHooks = {
 
   usePlots: (
     projectId: string,
-    scoreId: string
+    scoreId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     plots: Plot[];
     loading: boolean;
@@ -115,7 +134,9 @@ export type ProjectHooks = {
 
   useNotes: (
     projectId: string,
-    scoreId: string
+    scoreId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     notes: Note[];
     noteLoading: boolean;
@@ -126,7 +147,9 @@ export type ProjectHooks = {
       projectId: string,
       scoreId: string,
       content: string,
-      type: keyof typeof noteElements
+      type: keyof typeof noteElements,
+      authorId: string,
+      isPublic: boolean
     ) => Promise<void>;
     updateNote: (
       projectId: string,
@@ -142,7 +165,9 @@ export type ProjectHooks = {
 
   useConnections: (
     projectId: string,
-    scoreId: string
+    scoreId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     connections: NoteConnection[];
     connectionLoading: boolean;
@@ -153,7 +178,9 @@ export type ProjectHooks = {
       projectId: string,
       scoreId: string,
       source: string,
-      target: string
+      target: string,
+      authorId: string,
+      isPublic: boolean
     ) => Promise<void>;
     deleteConnection: (
       projectId: string,
@@ -165,7 +192,9 @@ export type ProjectHooks = {
   useFindings: (
     projectId: string,
     scoreId: string,
-    noteId: string
+    noteId: string,
+    isPublic: boolean,
+    authorId: string
   ) => {
     findings: Finding[];
     loading: boolean;
@@ -177,7 +206,9 @@ export type ProjectHooks = {
       scoreId: string,
       noteId: string,
       content: string,
-      isGood: boolean
+      isGood: boolean,
+      authorId: string,
+      isPublic: boolean
     ) => Promise<void>;
     updateFinding: (
       projectId: string,
@@ -192,14 +223,36 @@ export type ProjectHooks = {
       findingId: string
     ) => Promise<void>;
   };
+
+  useUser: (
+    userId: string
+  ) => {
+    user: User | undefined;
+    loading: boolean;
+    error: Error | undefined;
+  };
+  useUserAction: () => {
+    addUser: (user: User) => Promise<void>;
+    updateUser: (updatedUser: User) => Promise<void>;
+    deleteUser: (userId: string) => Promise<void>;
+  };
 };
 
 export const ProjectHooksContext = createContext<ProjectHooks | null>(null);
 
-export const useProjects: ProjectHooks['useProjects'] = (options) => {
+export const usePubProjects: ProjectHooks['usePubProjects'] = (options) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useProjects(options);
+  return client.usePubProjects(options);
+};
+
+export const useMyProjects: ProjectHooks['useMyProjects'] = (
+  authorId,
+  options
+) => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useMyProjects(authorId, options);
 };
 
 export const useProject: ProjectHooks['useProject'] = (projectId) => {
@@ -220,10 +273,14 @@ export const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () =
   return client.useProjectScoreAction();
 };
 
-export const useScores: ProjectHooks['useScores'] = (projectId) => {
+export const useScores: ProjectHooks['useScores'] = (
+  projectId,
+  isPublic,
+  authorId
+) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useScores(projectId);
+  return client.useScores(projectId, isPublic, authorId);
 };
 
 export const useScoreAction: ProjectHooks['useScoreAction'] = () => {
@@ -238,10 +295,15 @@ export const useScoreDataAction: ProjectHooks['useScoreDataAction'] = () => {
   return client.useScoreDataAction();
 };
 
-export const useMemos: ProjectHooks['useMemos'] = (projectId, scoreId) => {
+export const useMemos: ProjectHooks['useMemos'] = (
+  projectId,
+  scoreId,
+  isPublic,
+  authorId
+) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useMemos(projectId, scoreId);
+  return client.useMemos(projectId, scoreId, isPublic, authorId);
 };
 
 export const useMemoAction: ProjectHooks['useMemoAction'] = () => {
@@ -250,10 +312,15 @@ export const useMemoAction: ProjectHooks['useMemoAction'] = () => {
   return client.useMemoAction();
 };
 
-export const usePlots: ProjectHooks['usePlots'] = (projectId, scoreId) => {
+export const usePlots: ProjectHooks['usePlots'] = (
+  projectId,
+  scoreId,
+  isPublic,
+  authorId
+) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.usePlots(projectId, scoreId);
+  return client.usePlots(projectId, scoreId, isPublic, authorId);
 };
 
 export const usePlotAction: ProjectHooks['usePlotAction'] = () => {
@@ -262,10 +329,15 @@ export const usePlotAction: ProjectHooks['usePlotAction'] = () => {
   return client.usePlotAction();
 };
 
-export const useNotes: ProjectHooks['useNotes'] = (projectId, scoreId) => {
+export const useNotes: ProjectHooks['useNotes'] = (
+  projectId,
+  scoreId,
+  isPublic,
+  authorId
+) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useNotes(projectId, scoreId);
+  return client.useNotes(projectId, scoreId, isPublic, authorId);
 };
 
 export const useNoteAction: ProjectHooks['useNoteAction'] = () => {
@@ -276,11 +348,13 @@ export const useNoteAction: ProjectHooks['useNoteAction'] = () => {
 
 export const useConnections: ProjectHooks['useConnections'] = (
   projectId,
-  scoreId
+  scoreId,
+  isPublic,
+  authorId
 ) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useConnections(projectId, scoreId);
+  return client.useConnections(projectId, scoreId, isPublic, authorId);
 };
 
 export const useConnectionAction: ProjectHooks['useConnectionAction'] = () => {
@@ -292,15 +366,29 @@ export const useConnectionAction: ProjectHooks['useConnectionAction'] = () => {
 export const useFindings: ProjectHooks['useFindings'] = (
   projectId,
   scoreId,
-  noteId
+  noteId,
+  isPublic,
+  authorId
 ) => {
   const client = useClient(ProjectHooksContext);
 
-  return client.useFindings(projectId, scoreId, noteId);
+  return client.useFindings(projectId, scoreId, noteId, isPublic, authorId);
 };
 
 export const useFindingAction: ProjectHooks['useFindingAction'] = () => {
   const client = useClient(ProjectHooksContext);
 
   return client.useFindingAction();
+};
+
+export const useUser: ProjectHooks['useUser'] = (userId) => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useUser(userId);
+};
+
+export const useUserAction: ProjectHooks['useUserAction'] = () => {
+  const client = useClient(ProjectHooksContext);
+
+  return client.useUserAction();
 };

@@ -19,6 +19,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-firebase-hooks": "^2.2.0",
+    "react-firebaseui": "^4.1.0",
     "react-flow-renderer": "^8.0.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -37,7 +38,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'; stylelint 'src/**/*.{css,jsx,tsx}'; cd functions/ && eslint 'src/**/*.{js,ts}'",
     "precommit": "lint-staged",
-    "deploy": "firebase deploy --only hosting"
+    "deploy-hosting": "firebase deploy --only hosting",
+    "deploy-firestore-rules": "firebase deploy --only firestore:rules"
   },
   "eslintConfig": {
     "extends": [

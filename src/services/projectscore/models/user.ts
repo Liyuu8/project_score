@@ -1,24 +1,27 @@
 import firebase from 'firebase';
 
 export type User = {
-  id?: string;
-  screenName: string;
+  id: string;
+  inAppUserId: string;
   displayName: string | null;
-  description: string | null;
+  inAppUserName: string;
+  email: string;
+  bio: string;
   photoUrl: string | null;
   provider: string;
-  providerUid: string;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
 
 export const blankUser: User = {
-  screenName: '',
+  id: '',
+  inAppUserId: '',
   displayName: null,
-  description: null,
+  inAppUserName: '',
+  email: '',
+  bio: '',
   photoUrl: null,
-  provider: 'twitter',
-  providerUid: '',
+  provider: 'google',
   createdAt: null,
   updatedAt: null,
 };

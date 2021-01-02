@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
@@ -7,6 +7,7 @@ import { useProjectAction, useProjectScoreAction } from 'hooks/project';
 import { Project } from 'services/projectscore/models/project';
 import paths from 'utils/paths';
 import ModalActionButtons from 'components/common/buttons/ModalActionButtons';
+import { UserContext } from 'contexts';
 
 interface Props {
   project?: Project;
@@ -15,11 +16,15 @@ interface Props {
 
 const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
   const history = useHistory();
+  const { userId } = useContext(UserContext);
+
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+
   const { addProjectScore } = useProjectScoreAction();
   const { updateProject, deleteProject } = useProjectAction();
 
@@ -27,6 +32,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
     setOpen(true);
     setTitle(project ? project.title : '');
     setDescription(project ? project.description : '');
+    setIsPublic(project ? project.isPublic : false);
   };
 
   const closeModal = () => {
@@ -35,6 +41,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
   };
 
   const handleSubmit = useCallback(async () => {
+    if (!userId) return;
     if (!title) {
       setError(true);
 
@@ -44,17 +51,23 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
     if (!project?.title) {
       setPending(true);
       const projectId = uuid();
-      await addProjectScore(projectId, title, description);
+      await addProjectScore(projectId, title, description, userId, isPublic);
       setPending(false);
       history.push(`/project/${projectId}`);
     } else {
       setPending(true);
-      await updateProject(project.id, { ...project, title, description });
+      await updateProject(project.id, {
+        ...project,
+        title,
+        description,
+        authorId: userId,
+        isPublic,
+      });
       setPending(false);
     }
     closeModal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, addProjectScore]);
+  }, [title, description, isPublic, addProjectScore]);
 
   const handleCancel = useCallback(async () => closeModal(), []);
 
@@ -112,6 +125,13 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             onChange={(e, { value }) =>
               setDescription(value ? value.toString() : '')
             }
+          />
+          <Form.Checkbox
+            label="プロジェクトを公開する"
+            toggle
+            checked={isPublic}
+            onChange={() => setIsPublic(!isPublic)}
+            disabled={!!project}
           />
         </Form>
       </Modal.Content>

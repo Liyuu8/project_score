@@ -6,6 +6,8 @@ export type Note = {
   type: keyof typeof noteElements;
   posX: number;
   posY: number;
+  authorId: string;
+  isPublic: boolean;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -16,6 +18,8 @@ export const blankNote: Note = {
   type: 'measure',
   posX: 0,
   posY: 0,
+  authorId: '',
+  isPublic: false,
   createdAt: null,
   updatedAt: null,
 };

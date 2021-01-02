@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import projectScoreTheme from './contexts/theme';
-import { ThemeContext } from './contexts/contexts';
+import { ThemeContext } from './contexts';
 import FirebaseApp from './FirebaseApp';
 import App from './App';
 import reportWebVitals from './reportWebVitals';

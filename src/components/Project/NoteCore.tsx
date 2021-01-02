@@ -1,9 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button, Grid, Popup, Segment, Table } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { Note, noteElements } from 'services/projectscore/models/note';
 import { useFindingAction, useFindings, useNoteAction } from 'hooks/project';
+import { ProjectContext, UserContext } from 'contexts';
 import ModalForAddOrEdit, {
   addOrEditModalId,
 } from '../common/modal/ModalForAddOrEdit';
@@ -17,10 +18,19 @@ interface Property {
 }
 
 const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
+  const { userId } = useContext(UserContext);
+  const { isPublicProject } = useContext(ProjectContext);
+
   const noteContent = note.content
     ? note.content
     : `${noteElements[note.type].name}を記入してください`;
-  const { findings } = useFindings(projectId, scoreId, note.id);
+  const { findings } = useFindings(
+    projectId,
+    scoreId,
+    note.id,
+    isPublicProject,
+    userId
+  );
   const { updateNote, deleteNote } = useNoteAction();
   const { addFinding, updateFinding, deleteFinding } = useFindingAction();
 
@@ -120,7 +130,15 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                   label="得られた知見"
                   triggerButton={<Button icon="thumbs up outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
-                    addFinding(projectId, scoreId, note.id, newContent, true)
+                    addFinding(
+                      projectId,
+                      scoreId,
+                      note.id,
+                      newContent,
+                      true,
+                      userId,
+                      isPublicProject
+                    )
                   )}
                 />
                 <ModalForAddOrEdit
@@ -128,7 +146,15 @@ const NoteCore: FC<Property> = ({ projectId, scoreId, note, noteTitle }) => {
                   label="得られた知見"
                   triggerButton={<Button icon="thumbs down outline" />}
                   onActionClick={handleModalActionForAddOrEdit((newContent) =>
-                    addFinding(projectId, scoreId, note.id, newContent, false)
+                    addFinding(
+                      projectId,
+                      scoreId,
+                      note.id,
+                      newContent,
+                      false,
+                      userId,
+                      isPublicProject
+                    )
                   )}
                 />
                 <ModalForDelete

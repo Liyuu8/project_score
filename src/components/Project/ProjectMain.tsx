@@ -1,9 +1,10 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Button, Dimmer, Grid, Icon, Loader, Tab } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 import { useScores } from 'hooks/project';
 import ModalForManageScore from 'components/common/modal/ModalForManageScore';
+import { ProjectContext, UserContext } from 'contexts';
 import ScoreBoard from './ScoreBoard';
 import Plots from './Plots';
 
@@ -13,19 +14,10 @@ interface Panes {
 }
 
 const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
-  const StyledGrid = styled(Grid)`
-    &&& {
-      padding: 1rem;
-    }
-  `;
-  const StyledButton = styled(Button)`
-    &&& {
-      margin-left: 10px;
-      margin-top: 5px;
-    }
-  `;
+  const { userId } = useContext(UserContext);
+  const { isPublicProject } = useContext(ProjectContext);
 
-  const { scores, loading } = useScores(projectId);
+  const { scores, loading } = useScores(projectId, isPublicProject, userId);
   const [panes, setPanes] = useState<Panes[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
@@ -60,6 +52,18 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
   useEffect(() => {
     paneInfoMemo();
   }, [paneInfoMemo]);
+
+  const StyledGrid = styled(Grid)`
+    &&& {
+      padding: 1rem;
+    }
+  `;
+  const StyledButton = styled(Button)`
+    &&& {
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+  `;
 
   return loading ? (
     <Dimmer active inverted>

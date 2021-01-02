@@ -1,7 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import firebase from 'firebase';
 
 import { ProjectHooksContext } from 'hooks/project';
-import useProjects from 'hooks/project/firestore/use-projects';
+import usePubProjects from 'hooks/project/firestore/use-pub-projects';
+import useMyProjects from 'hooks/project/firestore/use-my-projects';
 import useProject from 'hooks/project/firestore/use-project';
 import useProjectAction from 'hooks/project/firestore/use-project-action';
 import useProjectScoreAction from 'hooks/project/firestore/use-project-score-action';
@@ -18,12 +20,63 @@ import useConnections from 'hooks/project/firestore/use-connections';
 import useConnectionAction from 'hooks/project/firestore/use-connection-action';
 import useFindings from 'hooks/project/firestore/use-findings';
 import useFindingAction from 'hooks/project/firestore/use-finding-action';
+import useUser from 'hooks/project/firestore/use-user';
+import useUserAction from 'hooks/project/firestore/use-user-action';
+import { ProjectContext, UserContext } from 'contexts';
+import { blankUser } from 'services/projectscore/models/user';
+import { auth } from 'utils/firebase';
 
 const FirebaseApp: FC = ({ children }) => {
+  const [userId, setUserId] = useState('');
+  const [authLoading, setAuthLoading] = useState(true);
+  const [
+    credential,
+    setCredential,
+  ] = useState<firebase.auth.UserCredential | null>(null);
+  const authCounterRef = useRef(0);
+  const { addUser } = useUserAction();
+
+  const [isPublicProject, setIsPublicProject] = useState(false);
+
+  const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+    if (!firebaseUser) {
+      setUserId('');
+      setAuthLoading(false);
+
+      return;
+    }
+
+    if (authCounterRef.current === 1 && credential) {
+      const newUser = {
+        ...blankUser,
+        id: firebaseUser.uid,
+        inAppUserId: firebaseUser.uid,
+        displayName: firebaseUser.displayName,
+        inAppUserName: firebaseUser.displayName ?? '',
+        email: firebaseUser.email ?? '',
+        photoUrl: firebaseUser.photoURL,
+      };
+
+      await addUser(newUser);
+      setUserId(newUser.id);
+    } else if (!userId) {
+      setUserId(firebaseUser.uid);
+    }
+    setAuthLoading(false);
+  });
+
+  useEffect(() => {
+    if (credential) authCounterRef.current += 1;
+
+    return unsubscribe;
+    // don't suppress trigger with using deps to enable counter
+  });
+
   return (
     <ProjectHooksContext.Provider
       value={{
-        useProjects,
+        usePubProjects,
+        useMyProjects,
         useProject,
         useProjectAction,
         useProjectScoreAction,
@@ -40,11 +93,31 @@ const FirebaseApp: FC = ({ children }) => {
         useConnectionAction,
         useFindings,
         useFindingAction,
+        useUser,
+        useUserAction,
       }}
     >
-      {children}
+      <UserContext.Provider
+        value={{
+          userId,
+          authLoading,
+          setAuthLoading,
+          credential,
+          setCredential,
+        }}
+      >
+        <ProjectContext.Provider
+          value={{ isPublicProject, setIsPublicProject }}
+        >
+          {children}
+        </ProjectContext.Provider>
+      </UserContext.Provider>
     </ProjectHooksContext.Provider>
   );
 };
 
 export default FirebaseApp;
+
+// [REF]
+// https://github.com/oukayuka/ReactFirebaseBook/blob/master/06-auth/mangarel-demo/src/FirebaseApp.tsx
+// https://github.com/yamitzky/react-firebase-hooks-injection/blob/master/src/App.tsx

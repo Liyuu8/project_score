@@ -8,17 +8,22 @@ import { ProjectHooks } from '..';
 const useFindings: ProjectHooks['useFindings'] = (
   projectId,
   scoreId,
-  noteId
+  noteId,
+  isPublic,
+  authorId
 ) => {
+  const findingRef = db
+    .collection(collectionName.projects)
+    .doc(projectId)
+    .collection(collectionName.scores)
+    .doc(scoreId)
+    .collection(collectionName.notes)
+    .doc(noteId)
+    .collection(collectionName.findings);
   const [findings, loading, error] = useCollectionData<Finding>(
-    db
-      .collection(collectionName.projects)
-      .doc(projectId)
-      .collection(collectionName.scores)
-      .doc(scoreId)
-      .collection(collectionName.notes)
-      .doc(noteId)
-      .collection(collectionName.findings),
+    isPublic
+      ? findingRef.where('isPublic', '==', true)
+      : findingRef.where('authorId', '==', authorId),
     {
       idField: 'id',
       snapshotListenOptions: { includeMetadataChanges: true },

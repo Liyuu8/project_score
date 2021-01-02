@@ -8,3 +8,6 @@ export function useClient<T>(context: React.Context<T | null>): T {
 
   return client;
 }
+
+// [REF]
+// https://github.com/yamitzky/react-firebase-hooks-injection/blob/master/src/hooks/di.tsx

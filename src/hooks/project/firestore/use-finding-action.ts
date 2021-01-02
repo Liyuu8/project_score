@@ -14,13 +14,17 @@ const useFindingAction: ProjectHooks['useFindingAction'] = () => {
       scoreId: string,
       noteId: string,
       content: string,
-      isGood: boolean
+      isGood: boolean,
+      authorId: string,
+      isPublic: boolean
     ) => {
       try {
         const newFinding = {
           id: uuid(),
           content,
           isGood,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };

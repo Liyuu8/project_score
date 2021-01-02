@@ -13,7 +13,9 @@ const useConnectionAction: ProjectHooks['useConnectionAction'] = () => {
       projectId: string,
       scoreId: string,
       source: string,
-      target: string
+      target: string,
+      authorId: string,
+      isPublic: boolean
     ) => {
       try {
         const newConnection = {
@@ -21,6 +23,8 @@ const useConnectionAction: ProjectHooks['useConnectionAction'] = () => {
           id: uuid(),
           sourceNoteId: source,
           targetNoteId: target,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };

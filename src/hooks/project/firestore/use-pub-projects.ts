@@ -10,12 +10,13 @@ const defaultOptions: Required<ProjectsOptions> = {
   limit: 30,
 };
 
-const useProjects: ProjectHooks['useProjects'] = (options) => {
+const usePubProjects: ProjectHooks['usePubProjects'] = (options) => {
   const optionsRef = useRef({ ...defaultOptions, ...options });
 
   const [projects, loading, error] = useCollectionData<Project>(
     db
       .collection(collectionName.projects)
+      .where('isPublic', '==', true)
       .orderBy('updatedAt', 'desc')
       .limit(optionsRef.current.limit),
     {
@@ -24,7 +25,7 @@ const useProjects: ProjectHooks['useProjects'] = (options) => {
     }
   );
 
-  return { projects: projects ?? [], loading, error };
+  return { pubProjects: projects ?? [], pubProjectsLoading: loading, error };
 };
 
-export default useProjects;
+export default usePubProjects;

@@ -9,7 +9,13 @@ import { ProjectHooks } from '..';
 
 const useMemoAction: ProjectHooks['useMemoAction'] = () => {
   const addMemo = useCallback(
-    async (projectId: string, scoreId: string, content: string) => {
+    async (
+      projectId: string,
+      scoreId: string,
+      content: string,
+      authorId: string,
+      isPublic: boolean
+    ) => {
       try {
         if (!content) {
           return;
@@ -17,6 +23,8 @@ const useMemoAction: ProjectHooks['useMemoAction'] = () => {
         const newMemo = {
           id: uuid(),
           content,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };

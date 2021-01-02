@@ -13,7 +13,9 @@ const useNoteAction: ProjectHooks['useNoteAction'] = () => {
       projectId: string,
       scoreId: string,
       content: string,
-      type: keyof typeof noteElements
+      type: keyof typeof noteElements,
+      authorId: string,
+      isPublic: boolean
     ) => {
       try {
         const newNote = {
@@ -22,6 +24,8 @@ const useNoteAction: ProjectHooks['useNoteAction'] = () => {
           type,
           posX: noteElements[type].posX,
           posY: noteElements[type].posY,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };

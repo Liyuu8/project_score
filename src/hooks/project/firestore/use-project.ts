@@ -6,13 +6,8 @@ import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
 const useProject: ProjectHooks['useProject'] = (projectId) => {
-  if (!projectId) {
-    return { project: undefined, loading: false, error: undefined };
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [project, loading, error] = useDocumentData<Project>(
-    db.collection(collectionName.projects).doc(projectId)
+    projectId && db.collection(collectionName.projects).doc(projectId)
   );
 
   return { project, loading, error };

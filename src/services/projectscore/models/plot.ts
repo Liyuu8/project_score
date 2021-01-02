@@ -5,6 +5,8 @@ export type Plot = {
   content: string;
   index: number | null;
   type: keyof typeof plotElements | null;
+  authorId: string;
+  isPublic: boolean;
   createdAt: firebase.firestore.Timestamp | null;
   updatedAt: firebase.firestore.Timestamp | null;
 };
@@ -14,6 +16,8 @@ export const blankPlot: Plot = {
   content: '',
   index: null,
   type: null,
+  authorId: '',
+  isPublic: false,
   createdAt: null,
   updatedAt: null,
 };

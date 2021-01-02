@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import styled from '@emotion/styled';
-import Loader from 'semantic-ui-react/dist/commonjs/elements/Loader';
-import Segment from 'semantic-ui-react/dist/commonjs/elements/Segment';
+import { Loader, Segment } from 'semantic-ui-react';
 
 type loaderSize = 'wide' | 'narrow';
 

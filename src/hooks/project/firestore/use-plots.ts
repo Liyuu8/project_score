@@ -5,15 +5,23 @@ import { Plot } from 'services/projectscore/models/plot';
 import { db } from 'utils/firebase';
 import { ProjectHooks } from '..';
 
-const usePlots: ProjectHooks['usePlots'] = (projectId, scoreId) => {
+const usePlots: ProjectHooks['usePlots'] = (
+  projectId,
+  scoreId,
+  isPublic,
+  authorId
+) => {
+  const plotRef = db
+    .collection(collectionName.projects)
+    .doc(projectId)
+    .collection(collectionName.scores)
+    .doc(scoreId)
+    .collection(collectionName.plots)
+    .orderBy('index', 'asc');
   const [plots, loading, error] = useCollectionData<Plot>(
-    db
-      .collection(collectionName.projects)
-      .doc(projectId)
-      .collection(collectionName.scores)
-      .doc(scoreId)
-      .collection(collectionName.plots)
-      .orderBy('index', 'asc'),
+    isPublic
+      ? plotRef.where('isPublic', '==', true)
+      : plotRef.where('authorId', '==', authorId),
     {
       idField: 'id',
       snapshotListenOptions: { includeMetadataChanges: true },

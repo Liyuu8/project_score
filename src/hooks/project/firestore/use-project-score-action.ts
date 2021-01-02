@@ -20,7 +20,13 @@ import { ProjectHooks } from '..';
 
 const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
   const addProjectScore = useCallback(
-    async (projectId: string, title: string, description: string) => {
+    async (
+      projectId: string,
+      title: string,
+      description: string,
+      authorId: string,
+      isPublic: boolean
+    ) => {
       if (!title) {
         return;
       }
@@ -34,6 +40,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
           id: projectId,
           title,
           description,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
@@ -42,6 +50,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
         const newScore = {
           ...blankScore,
           id: uuid(),
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
@@ -53,6 +63,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
         const newMemo = {
           ...blankMemo,
           id: uuid(),
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
@@ -66,6 +78,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
           id: uuid(),
           type: plotType,
           index,
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }));
@@ -82,6 +96,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
           ...blankNote,
           ...initElement,
           id: uuid(),
+          authorId,
+          isPublic,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }));
@@ -100,6 +116,8 @@ const useProjectScoreAction: ProjectHooks['useProjectScoreAction'] = () => {
             id: uuid(),
             sourceNoteId: newNotes[initElement.source].id,
             targetNoteId: newNotes[initElement.target].id,
+            authorId,
+            isPublic,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           })

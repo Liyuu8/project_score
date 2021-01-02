@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
   Controls,
   Elements,
@@ -16,6 +16,7 @@ import {
   useNotes,
 } from 'hooks/project';
 import SizedLoader from 'components/common/atoms/SizedLoader';
+import { ProjectContext, UserContext } from 'contexts';
 import NoteWrapper from './NoteWrapper';
 
 interface Props {
@@ -27,8 +28,21 @@ const strokeStyle = { stroke: '#fff', strokeWidth: '3px' };
 const selectedStrokeStyle = { stroke: '#f00', strokeWidth: '3px' };
 
 const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
-  const { notes, noteLoading } = useNotes(projectId, scoreId);
-  const { connections, connectionLoading } = useConnections(projectId, scoreId);
+  const { userId } = useContext(UserContext);
+  const { isPublicProject } = useContext(ProjectContext);
+
+  const { notes, noteLoading } = useNotes(
+    projectId,
+    scoreId,
+    isPublicProject,
+    userId
+  );
+  const { connections, connectionLoading } = useConnections(
+    projectId,
+    scoreId,
+    isPublicProject,
+    userId
+  );
   const { updateNote } = useNoteAction();
   const { addConnection, deleteConnection } = useConnectionAction();
   const [flowElements, setFlowElements] = useState<Elements>([]);
@@ -114,7 +128,14 @@ const ScoreCore: FC<Props> = ({ projectId, scoreId }) => {
         onConnect={(params: Edge | Connection) =>
           params.source &&
           params.target &&
-          addConnection(projectId, scoreId, params.source, params.target)
+          addConnection(
+            projectId,
+            scoreId,
+            params.source,
+            params.target,
+            userId,
+            isPublicProject
+          )
         }
         onElementsRemove={(elements: Elements) =>
           deleteConnection(projectId, scoreId, elements[0].id)

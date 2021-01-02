@@ -14,3 +14,6 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 export { auth, db };
+
+// [REF]
+// https://github.com/k-tada/react-firebase-todo/blob/master/src/js/utils/firebase.js

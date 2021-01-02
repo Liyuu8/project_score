@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Button, Grid } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
@@ -7,6 +7,7 @@ import {
   additionalNoteTypeList,
   noteElements,
 } from 'services/projectscore/models/note';
+import { ProjectContext, UserContext } from 'contexts';
 import ScoreCore from './ScoreCore';
 import ModalForAddOrEdit, {
   addOrEditModalId,
@@ -19,6 +20,11 @@ interface Props {
 }
 
 const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
+  const { userId } = useContext(UserContext);
+  const { isPublicProject } = useContext(ProjectContext);
+
+  const { addNote } = useNoteAction();
+
   const StyledGrid = styled(Grid)`
     &&& {
       margin-top: 1px;
@@ -29,8 +35,6 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
       margin: 5px;
     }
   `;
-
-  const { addNote } = useNoteAction();
 
   return (
     <>
@@ -54,7 +58,15 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
                 />
               }
               onActionClick={(isSubmitted, content) =>
-                isSubmitted && addNote(projectId, scoreId, content, noteType)
+                isSubmitted &&
+                addNote(
+                  projectId,
+                  scoreId,
+                  content,
+                  noteType,
+                  userId,
+                  isPublicProject
+                )
               }
             />
           ))}
