@@ -32,6 +32,7 @@ const Plots: FC<{ projectId: string; scoreId: string }> = ({
             projectId={projectId}
             scoreId={scoreId}
             plot={plot}
+            isLoggedIn={!!userId}
           />
         ))
       )}

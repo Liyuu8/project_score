@@ -112,10 +112,9 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             value={title}
             error={error}
             onChange={(e, { value }) => {
+              if (!userId) return;
               setTitle(value ? value.toString() : '');
-              if (value) {
-                setError(false);
-              }
+              if (value) setError(false);
             }}
           />
           <Form.TextArea
@@ -123,7 +122,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             placeholder="記入欄"
             value={description}
             onChange={(e, { value }) =>
-              setDescription(value ? value.toString() : '')
+              userId && setDescription(value ? value.toString() : '')
             }
           />
           <Form.Checkbox
@@ -136,6 +135,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
         </Form>
       </Modal.Content>
       <ModalActionButtons
+        isLoggedIn={!!userId}
         isExisting={!!project}
         handleSubmit={handleSubmit}
         handleCancel={handleCancel}

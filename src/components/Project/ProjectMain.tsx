@@ -72,14 +72,16 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
   ) : (
     <StyledGrid doubling columns={2}>
       <Grid.Column width={13}>
-        <ModalForManageScore
-          projectId={projectId}
-          triggerButton={
-            <StyledButton color="teal" floated="right">
-              New Score
-            </StyledButton>
-          }
-        />
+        {userId && (
+          <ModalForManageScore
+            projectId={projectId}
+            triggerButton={
+              <StyledButton color="teal" floated="right">
+                New Score
+              </StyledButton>
+            }
+          />
+        )}
         <ModalForManageScore
           projectId={projectId}
           score={scores[activeIndex]}

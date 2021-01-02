@@ -1,9 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useContext, useState } from 'react';
 import { Dimmer, Form, Header, Loader, Modal } from 'semantic-ui-react';
 
 import { useScoreAction, useScoreDataAction } from 'hooks/project';
 import { Score } from 'services/projectscore/models/score';
 import ModalActionButtons from 'components/common/buttons/ModalActionButtons';
+import { UserContext } from 'contexts';
 
 interface Props {
   projectId: string;
@@ -16,6 +17,8 @@ const ModalForManageScore: FC<Props> = ({
   score,
   triggerButton,
 }) => {
+  const { userId } = useContext(UserContext);
+
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(false);
@@ -108,10 +111,9 @@ const ModalForManageScore: FC<Props> = ({
             value={title}
             error={error}
             onChange={(e, { value }) => {
+              if (!userId) return;
               setTitle(value ? value.toString() : '');
-              if (value) {
-                setError(false);
-              }
+              if (value) setError(false);
             }}
           />
           {!score && (
@@ -125,6 +127,7 @@ const ModalForManageScore: FC<Props> = ({
         </Form>
       </Modal.Content>
       <ModalActionButtons
+        isLoggedIn={!!userId}
         isExisting={!!score}
         handleSubmit={handleSubmit}
         handleCancel={handleCancel}

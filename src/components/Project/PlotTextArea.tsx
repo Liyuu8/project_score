@@ -10,7 +10,8 @@ const PlotTextArea: FC<{
   projectId: string;
   scoreId: string;
   plot: Plot;
-}> = ({ projectId, scoreId, plot }) => {
+  isLoggedIn: boolean;
+}> = ({ projectId, scoreId, plot, isLoggedIn }) => {
   const { updatePlot } = usePlotAction();
 
   return (
@@ -23,6 +24,7 @@ const PlotTextArea: FC<{
       // ISSUE:
       // 高速で入力する値を変化させると、DBへの書き込み⇨読み込みの処理が追いつかない
       onChange={(e, { value }) =>
+        isLoggedIn &&
         plot &&
         updatePlot(projectId, scoreId, {
           ...plot,

@@ -44,32 +44,33 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
           <ScoreMemo projectId={projectId} scoreId={scoreId} />
         </Grid.Column>
         <Grid.Column width={6}>
-          {additionalNoteTypeList.map((noteType) => (
-            <ModalForAddOrEdit
-              key={noteType}
-              id={addOrEditModalId.addNote + noteType}
-              label={noteElements[noteType].name}
-              triggerButton={
-                <StyledButton
-                  icon="add"
-                  size="mini"
-                  label={noteElements[noteType].name}
-                  labelPosition="left"
-                />
-              }
-              onActionClick={(isSubmitted, content) =>
-                isSubmitted &&
-                addNote(
-                  projectId,
-                  scoreId,
-                  content,
-                  noteType,
-                  userId,
-                  isPublicProject
-                )
-              }
-            />
-          ))}
+          {userId &&
+            additionalNoteTypeList.map((noteType) => (
+              <ModalForAddOrEdit
+                key={noteType}
+                id={addOrEditModalId.addNote + noteType}
+                label={noteElements[noteType].name}
+                triggerButton={
+                  <StyledButton
+                    icon="add"
+                    size="mini"
+                    label={noteElements[noteType].name}
+                    labelPosition="left"
+                  />
+                }
+                onActionClick={(isSubmitted, content) =>
+                  isSubmitted &&
+                  addNote(
+                    projectId,
+                    scoreId,
+                    content,
+                    noteType,
+                    userId,
+                    isPublicProject
+                  )
+                }
+              />
+            ))}
         </Grid.Column>
       </StyledGrid>
     </>

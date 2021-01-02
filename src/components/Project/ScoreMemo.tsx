@@ -40,15 +40,17 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
     <Message>
       <Message.Header>
         Memo
-        <ModalForAddOrEdit
-          id={addOrEditModalId.addScoreMemo}
-          label="メモ"
-          triggerButton={<StyledButton icon="add" size="mini" />}
-          onActionClick={(isSubmitted, content) =>
-            isSubmitted &&
-            addMemo(projectId, scoreId, content, userId, isPublicProject)
-          }
-        />
+        {userId && (
+          <ModalForAddOrEdit
+            id={addOrEditModalId.addScoreMemo}
+            label="メモ"
+            triggerButton={<StyledButton icon="add" size="mini" />}
+            onActionClick={(isSubmitted, content) =>
+              isSubmitted &&
+              addMemo(projectId, scoreId, content, userId, isPublicProject)
+            }
+          />
+        )}
       </Message.Header>
       {loading ? (
         <SizedLoader size="narrow" />
@@ -57,27 +59,29 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
           {memos.map((memo) => (
             <div key={memo.id}>
               ・{memo.content}
-              <StyledButtonGroup size="mini">
-                <ModalForAddOrEdit
-                  id={addOrEditModalId.editScoreMemo + memo.id}
-                  label="メモ"
-                  content={memo.content}
-                  triggerButton={<Button icon="edit" />}
-                  onActionClick={(isSubmitted, content) =>
-                    isSubmitted &&
-                    updateMemo(projectId, scoreId, { ...memo, content })
-                  }
-                />
-                <ModalForDelete
-                  id={deleteModalId.scoreMemo + memo.id}
-                  label="メモ"
-                  content={memo.content}
-                  triggerButton={<Button icon="delete" />}
-                  onActionClick={(isSubmitted) =>
-                    isSubmitted && deleteMemo(projectId, scoreId, memo.id)
-                  }
-                />
-              </StyledButtonGroup>
+              {userId && (
+                <StyledButtonGroup size="mini">
+                  <ModalForAddOrEdit
+                    id={addOrEditModalId.editScoreMemo + memo.id}
+                    label="メモ"
+                    content={memo.content}
+                    triggerButton={<Button icon="edit" />}
+                    onActionClick={(isSubmitted, content) =>
+                      isSubmitted &&
+                      updateMemo(projectId, scoreId, { ...memo, content })
+                    }
+                  />
+                  <ModalForDelete
+                    id={deleteModalId.scoreMemo + memo.id}
+                    label="メモ"
+                    content={memo.content}
+                    triggerButton={<Button icon="delete" />}
+                    onActionClick={(isSubmitted) =>
+                      isSubmitted && deleteMemo(projectId, scoreId, memo.id)
+                    }
+                  />
+                </StyledButtonGroup>
+              )}
             </div>
           ))}
         </Message.List>
