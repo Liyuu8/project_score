@@ -10,10 +10,13 @@ import ModalForAddOrEdit, {
 } from '../common/modal/ModalForAddOrEdit';
 import ModalForDelete, { deleteModalId } from '../common/modal/ModalForDelete';
 
-const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
-  projectId,
-  scoreId,
-}) => {
+interface Props {
+  projectId: string;
+  scoreId: string;
+  scoreAuthorId: string;
+}
+
+const ScoreMemo: FC<Props> = ({ projectId, scoreId, scoreAuthorId }) => {
   const { userId } = useContext(UserContext);
   const { isPublicProject } = useContext(ProjectContext);
 
@@ -39,7 +42,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
     <Message>
       <Message.Header>
         Memo
-        {userId && (
+        {scoreAuthorId === userId && (
           <ModalForAddOrEdit
             id={addOrEditModalId.addScoreMemo}
             label="メモ"
@@ -58,7 +61,7 @@ const ScoreMemo: FC<{ projectId: string; scoreId: string }> = ({
           {memos.map((memo) => (
             <ListContent key={memo.id}>
               ・{memo.content}
-              {userId && (
+              {memo.authorId === userId && (
                 <Button.Group size="mini" floated="right" compact>
                   <ModalForAddOrEdit
                     id={addOrEditModalId.editScoreMemo + memo.id}

@@ -3,7 +3,7 @@ import { Button, Grid, Icon, Modal } from 'semantic-ui-react';
 import styled from '@emotion/styled';
 
 interface Props {
-  isLoggedIn: boolean;
+  isAuthor: boolean;
   isExisting: boolean;
   handleSubmit: () => void;
   handleCancel: () => void;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const ModalActionButtons: FC<Props> = ({
-  isLoggedIn,
+  isAuthor,
   isExisting,
   handleSubmit,
   handleCancel,
@@ -26,7 +26,7 @@ const ModalActionButtons: FC<Props> = ({
   return (
     <Modal.Actions>
       <Grid columns={2}>
-        {isLoggedIn && isExisting && (
+        {isAuthor && isExisting && (
           <Grid.Column floated="left" textAlign="left" width={5}>
             <Button color="red" onClick={handleDelete}>
               <Icon name="trash" /> 削除
@@ -37,7 +37,7 @@ const ModalActionButtons: FC<Props> = ({
           <StyledButton color="grey" onClick={handleCancel}>
             <Icon name="remove" /> キャンセル
           </StyledButton>
-          {isLoggedIn && (
+          {isAuthor && (
             <Button color="green" onClick={handleSubmit}>
               <Icon name="checkmark" /> 決定
             </Button>

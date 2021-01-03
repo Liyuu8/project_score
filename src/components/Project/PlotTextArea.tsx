@@ -6,12 +6,14 @@ import { usePlotAction } from 'hooks/project';
 
 // const sleep = () => new Promise((resolve) => setTimeout(resolve, 5000));
 
-const PlotTextArea: FC<{
+interface Props {
   projectId: string;
   scoreId: string;
   plot: Plot;
-  isLoggedIn: boolean;
-}> = ({ projectId, scoreId, plot, isLoggedIn }) => {
+  isAuthor: boolean;
+}
+
+const PlotTextArea: FC<Props> = ({ projectId, scoreId, plot, isAuthor }) => {
   const { updatePlot } = usePlotAction();
 
   return (
@@ -24,7 +26,7 @@ const PlotTextArea: FC<{
       // ISSUE:
       // 高速で入力する値を変化させると、DBへの書き込み⇨読み込みの処理が追いつかない
       onChange={(e, { value }) =>
-        isLoggedIn &&
+        isAuthor &&
         plot &&
         updatePlot(projectId, scoreId, {
           ...plot,

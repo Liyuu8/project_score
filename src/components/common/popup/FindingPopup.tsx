@@ -36,18 +36,14 @@ const FindingPopup: FC<Property> = ({
   const handleModalActionForAddOrEdit = (
     popupButtonPushedAction: (newContent: string) => void
   ) => (isSubmitted: boolean, submittedContent: string) => {
-    if (isSubmitted) {
-      popupButtonPushedAction(submittedContent);
-    }
+    if (isSubmitted) popupButtonPushedAction(submittedContent);
     onPopupClose();
   };
 
   const handleModalActionForDelete = (popupButtonPushedAction: () => void) => (
     isSubmitted: boolean
   ) => {
-    if (isSubmitted) {
-      popupButtonPushedAction();
-    }
+    if (isSubmitted) popupButtonPushedAction();
     onPopupClose();
   };
 
@@ -72,7 +68,11 @@ const FindingPopup: FC<Property> = ({
       position="top center"
       style={popupStyle}
       open={openedPopupKey === finding.id}
-      onOpen={userId ? () => setOpenedPopupKey(finding.id) : () => null}
+      onOpen={
+        finding.authorId === userId
+          ? () => setOpenedPopupKey(finding.id)
+          : () => null
+      }
       onClose={onPopupClose}
       // モーダルクリック時に閉じてしまうので、クリックイベントハンドラを別途実装する（popupCloseEvent）
       closeOnDocumentClick={false}

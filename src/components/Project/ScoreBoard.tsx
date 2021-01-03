@@ -17,9 +17,10 @@ import ScoreMemo from './ScoreMemo';
 interface Props {
   projectId: string;
   scoreId: string;
+  scoreAuthorId: string;
 }
 
-const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
+const ScoreBoard: FC<Props> = ({ projectId, scoreId, scoreAuthorId }) => {
   const { userId } = useContext(UserContext);
   const { isPublicProject } = useContext(ProjectContext);
 
@@ -41,10 +42,14 @@ const ScoreBoard: FC<Props> = ({ projectId, scoreId }) => {
       <ScoreCore projectId={projectId} scoreId={scoreId} />
       <StyledGrid doubling columns={2}>
         <Grid.Column width={10}>
-          <ScoreMemo projectId={projectId} scoreId={scoreId} />
+          <ScoreMemo
+            projectId={projectId}
+            scoreId={scoreId}
+            scoreAuthorId={scoreAuthorId}
+          />
         </Grid.Column>
         <Grid.Column width={6}>
-          {userId &&
+          {scoreAuthorId === userId &&
             additionalNoteTypeList.map((noteType) => (
               <ModalForAddOrEdit
                 key={noteType}

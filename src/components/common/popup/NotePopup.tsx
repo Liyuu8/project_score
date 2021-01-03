@@ -74,7 +74,9 @@ const NotePopup: FC<Property> = ({
       position="top center"
       style={popupStyle}
       open={openedPopupKey === note.id}
-      onOpen={userId ? () => setOpenedPopupKey(note.id) : () => null}
+      onOpen={
+        note.authorId === userId ? () => setOpenedPopupKey(note.id) : () => null
+      }
       onClose={onPopupClose}
       // モーダルクリック時に閉じてしまうので、クリックイベントハンドラを別途実装する（popupCloseEvent）
       closeOnDocumentClick={false}

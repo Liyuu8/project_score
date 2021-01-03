@@ -111,7 +111,7 @@ const ModalForManageScore: FC<Props> = ({
             value={title}
             error={error}
             onChange={(e, { value }) => {
-              if (!userId) return;
+              if (score?.authorId !== userId) return;
               setTitle(value ? value.toString() : '');
               if (value) setError(false);
             }}
@@ -127,7 +127,7 @@ const ModalForManageScore: FC<Props> = ({
         </Form>
       </Modal.Content>
       <ModalActionButtons
-        isLoggedIn={!!userId}
+        isAuthor={score?.authorId === userId}
         isExisting={!!score}
         handleSubmit={handleSubmit}
         handleCancel={handleCancel}

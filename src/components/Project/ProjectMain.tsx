@@ -33,7 +33,13 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
           pane: {
             key: score.id,
             attached: false,
-            content: <ScoreBoard projectId={projectId} scoreId={score.id} />,
+            content: (
+              <ScoreBoard
+                projectId={projectId}
+                scoreId={score.id}
+                scoreAuthorId={score.authorId}
+              />
+            ),
           },
         }))
       );
@@ -72,7 +78,7 @@ const ProjectMain: FC<{ projectId: string }> = ({ projectId }) => {
   ) : (
     <StyledGrid doubling columns={2}>
       <Grid.Column width={13}>
-        {userId && (
+        {scores[activeIndex]?.authorId === userId && (
           <ModalForManageScore
             projectId={projectId}
             triggerButton={

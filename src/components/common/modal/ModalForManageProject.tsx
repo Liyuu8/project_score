@@ -112,7 +112,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             value={title}
             error={error}
             onChange={(e, { value }) => {
-              if (!userId) return;
+              if (project?.authorId !== userId) return;
               setTitle(value ? value.toString() : '');
               if (value) setError(false);
             }}
@@ -122,7 +122,8 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             placeholder="記入欄"
             value={description}
             onChange={(e, { value }) =>
-              userId && setDescription(value ? value.toString() : '')
+              project?.authorId === userId &&
+              setDescription(value ? value.toString() : '')
             }
           />
           <Form.Checkbox
@@ -130,12 +131,12 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             toggle
             checked={isPublic}
             onChange={() => setIsPublic(!isPublic)}
-            disabled={!!project}
+            disabled={!!project} // TODO: プロジェクト作成後の公開・非公開の変更
           />
         </Form>
       </Modal.Content>
       <ModalActionButtons
-        isLoggedIn={!!userId}
+        isAuthor={project?.authorId === userId}
         isExisting={!!project}
         handleSubmit={handleSubmit}
         handleCancel={handleCancel}
