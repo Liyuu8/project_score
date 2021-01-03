@@ -75,7 +75,7 @@ const NavigationBar: FC = () => {
                 }
               />
             )}
-            {project?.authorId === userId && (
+            {userId && (
               <ModalForManageProject
                 triggerButton={
                   <StyledButton color="teal">New Project</StyledButton>
