@@ -127,6 +127,7 @@ const ModalForManageScore: FC<Props> = ({
         </Form>
       </Modal.Content>
       <ModalActionButtons
+        isLoggedIn={!!userId}
         isAuthor={score?.authorId === userId}
         isExisting={!!score}
         handleSubmit={handleSubmit}

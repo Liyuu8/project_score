@@ -112,7 +112,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             value={title}
             error={error}
             onChange={(e, { value }) => {
-              if (project?.authorId !== userId) return;
+              if (project ? project.authorId !== userId : !userId) return;
               setTitle(value ? value.toString() : '');
               if (value) setError(false);
             }}
@@ -122,7 +122,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
             placeholder="記入欄"
             value={description}
             onChange={(e, { value }) =>
-              project?.authorId === userId &&
+              (project ? project.authorId === userId : userId) &&
               setDescription(value ? value.toString() : '')
             }
           />
@@ -136,6 +136,7 @@ const ModalForManageProject: FC<Props> = ({ project, triggerButton }) => {
         </Form>
       </Modal.Content>
       <ModalActionButtons
+        isLoggedIn={!!userId}
         isAuthor={project?.authorId === userId}
         isExisting={!!project}
         handleSubmit={handleSubmit}
