@@ -16,7 +16,6 @@
 
 # env
 .env
-.firebaserc
 
 # Firebase Admin SDK credential
 *firebase-adminsdk*.json
